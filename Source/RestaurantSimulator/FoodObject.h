@@ -3,28 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameManager.h"
 #include "PlayerControllerPawn.h"
 #include "GameFramework/Actor.h"
-#include "Npc.generated.h"
+#include "FoodObject.generated.h"
 
 UCLASS()
-class RESTAURANTSIMULATOR_API ANpc : public AActor
+class RESTAURANTSIMULATOR_API AFoodObject : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ANpc();
-	
-	UFUNCTION(BlueprintCallable, Category = "NpcOrderTake")
-		void OrderTake();
+	AFoodObject();
 
-	AActor* Pawn;
-	AActor* GameManager;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* foodObject;
 
-	APlayerControllerPawn* PawnClass;
-	AGameManager* GameManagerClass;
+	UFUNCTION(BlueprintCallable, Category = "FoodInteraction")
+		void TakeFood();
+
+	UFUNCTION(BlueprintCallable, Category = "FoodRelease")
+		void ReleaseFood(FKey key);
+
+	UPROPERTY(EditAnywhere)
+		AActor* pawn;
+
+	APlayerControllerPawn* pawnClass;
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,8 +37,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	FVector TargetLocation;
-	FRotator TargetRotation;
 
 };

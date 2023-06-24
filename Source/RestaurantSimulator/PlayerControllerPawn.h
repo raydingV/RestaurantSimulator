@@ -21,6 +21,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		float rotationSpeed;
 
+	AActor* foodObject;
+
 	float currentTime;
 	float targetRotationZ;
 	
@@ -29,6 +31,10 @@ public:
 	FRotator TargetRotation;
 
 	bool newRotationSet;
+	bool takeAway;
+
+	int CountFood;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

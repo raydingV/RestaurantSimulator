@@ -3,38 +3,38 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameManager.h"
-#include "PlayerControllerPawn.h"
 #include "GameFramework/Actor.h"
-#include "Npc.generated.h"
+#include "InteractionActor.generated.h"
 
 UCLASS()
-class RESTAURANTSIMULATOR_API ANpc : public AActor
+class RESTAURANTSIMULATOR_API AInteractionActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ANpc();
-	
-	UFUNCTION(BlueprintCallable, Category = "NpcOrderTake")
-		void OrderTake();
-
-	AActor* Pawn;
-	AActor* GameManager;
-
-	APlayerControllerPawn* PawnClass;
-	AGameManager* GameManagerClass;
+	AInteractionActor();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector TargetLocation;
-	FRotator TargetRotation;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshComponent;
+
+	UPROPERTY(EditAnywhere)
+	UClass* FoodObject;
+	
+	UFUNCTION(BlueprintCallable, Category = "FoodMaker")
+		void FoodObjectCreate();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimationFood")
+	void FoodMakeAnimation();
 
 };

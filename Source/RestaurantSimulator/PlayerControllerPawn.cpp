@@ -9,7 +9,8 @@ APlayerControllerPawn::APlayerControllerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	newRotationSet = false;
-
+	takeAway = true;
+	CountFood = 0;
 }
 
 // Called when the game starts or when spawned
@@ -38,6 +39,15 @@ void APlayerControllerPawn::Tick(float DeltaTime)
 		}
 	}
 	
+	if(CountFood >= 1)
+	{
+		takeAway = false;
+	}
+	else
+	{
+		takeAway = true;
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -49,41 +59,23 @@ void APlayerControllerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void APlayerControllerPawn::CameraInput(float rotation)
 {
-	// FText keyDisplay = key.GetDisplayName();
-	//
-	// FString keyName = keyDisplay.ToString();
-
-	if(rotation <= 0.00f)
+	if(rotation != 0)
 	{
-		targetRotationZ = -90;
-		TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
-		UE_LOG(LogTemp, Warning, TEXT("%s"), rotation);
-		newRotationSet = true;	
+		if(rotation < 6.0f && rotation >= 2.0f)
+		{
+			targetRotationZ = -90;
+			TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
+			newRotationSet = true;	
+		}
+	
+		if(rotation >= 6.0f)
+		{
+			targetRotationZ = 90;
+			TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
+			newRotationSet = true;	
+		}	
 	}
-
-	if(rotation >= 0.00f)
-	{
-		targetRotationZ = 90;
-		TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
-		UE_LOG(LogTemp, Warning, TEXT("%s"), rotation);
-		newRotationSet = true;	
-	}
-
-	// if (keyName == TEXT("A"))
-	// {
-	// 	targetRotationZ = -90;
-	// 	TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
-	// 	UE_LOG(LogTemp, Warning, TEXT("Input"));
-	// 	newRotationSet = true;
-	// }
-	//
-	// if (keyName == TEXT("D"))
-	// {
-	// 	targetRotationZ = 90;
-	// 	TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
-	// 	UE_LOG(LogTemp, Warning, TEXT("Input"));
-	// 	newRotationSet = true;
-	// }
+	
 	
 }
 
