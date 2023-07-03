@@ -22,6 +22,7 @@ void AFoodObject::BeginPlay()
 	Super::BeginPlay();
 	pawn = Cast<APlayerControllerPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerControllerPawn::StaticClass()));
 	pawnClass = Cast<APlayerControllerPawn>(pawn);
+	
 }
 
 // Called every frame
@@ -40,6 +41,7 @@ void AFoodObject::TakeFood()
 		SetActorRelativeLocation(FVector3d(70,0,-35));
 		SetActorRotation(FRotator(0,0,0));
 		pawnClass->foodObject = this;
+		pawnClass->FoodTag = FoodTag;
 		pawnClass->CountFood++;
 	}
 }

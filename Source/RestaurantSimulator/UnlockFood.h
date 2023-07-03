@@ -3,34 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerControllerPawn.h"
+#include "GameManager.h"
 #include "GameFramework/Actor.h"
-#include "FoodObject.generated.h"
+#include "UnlockFood.generated.h"
 
 UCLASS()
-class RESTAURANTSIMULATOR_API AFoodObject : public AActor
+class RESTAURANTSIMULATOR_API AUnlockFood : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AFoodObject();
+	AUnlockFood();
 
 	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* foodObject;
+		UStaticMeshComponent* mesh;
 
-	UFUNCTION(BlueprintCallable, Category = "FoodInteraction")
-		void TakeFood();
-
-	UFUNCTION(BlueprintCallable, Category = "FoodRelease")
-		void ReleaseFood(FKey key);
+	UFUNCTION(BlueprintCallable, Category = "UnlockNewFood")
+		void UnlockFood();
 
 	UPROPERTY(EditAnywhere)
-		AActor* pawn;
+	AActor* GameManager;
 
-	APlayerControllerPawn* pawnClass;
+	AGameManager* GameManagerClass;
 
-	int FoodTag;
+	UPROPERTY(EditAnywhere)
+		int UnlockQue;
 
 protected:
 	// Called when the game starts or when spawned

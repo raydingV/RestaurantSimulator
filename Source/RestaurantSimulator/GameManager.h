@@ -15,7 +15,23 @@ public:
 	// Sets default values for this actor's properties
 	AGameManager();
 
-	int CounterNPC;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int CounterNPC;
+	
+	int Money;
+	int OrderLenght;
+	int MaxNpc;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int DailyNpcSpawn;
+
+	UFUNCTION(BlueprintCallable, Category = "NewDay")
+		void NewDayFunction();
+
+	UFUNCTION(BlueprintCallable, Category = "EndOfDay")
+		bool EndOfDay(int DailyNpc, int NpcCounter);
+
+	bool NewDay;
 
 protected:
 	// Called when the game starts or when spawned

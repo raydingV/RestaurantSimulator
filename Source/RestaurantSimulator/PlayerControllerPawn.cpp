@@ -75,7 +75,5 @@ void APlayerControllerPawn::CameraInput(float rotation)
 			newRotationSet = true;	
 		}	
 	}
-	
-	
 }
 

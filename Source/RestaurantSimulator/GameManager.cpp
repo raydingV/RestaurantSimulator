@@ -15,6 +15,11 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 	CounterNPC = 0;
+	Money = 0;
+	OrderLenght = 0;
+	MaxNpc = 6;
+	DailyNpcSpawn = 6;
+	NewDay = false;
 }
 
 // Called every frame
@@ -29,12 +34,33 @@ void AGameManager::Tick(float DeltaTime)
 		CountDownTimer = 1000.0f;
 	}
 	
-	if (NpcSpawn != nullptr && CountDownTimer <= 0)
+	if (NpcSpawn != nullptr && CountDownTimer <= 0 && DailyNpcSpawn > 0)
 	{
 		FActorSpawnParameters SpawnParams;
 		GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
 		CountDownTimer = 1000.0f;
 		CounterNPC++;
-	}  
+		DailyNpcSpawn--;
+	}
+	
 }
+
+void AGameManager::NewDayFunction()
+{
+	MaxNpc += 1;
+	DailyNpcSpawn = MaxNpc;
+	UE_LOG(LogTemp, Warning, TEXT("New Day!!!!"));
+}
+
+bool AGameManager::EndOfDay(int DailyNpc, int NpcCounter)
+{
+	if(DailyNpc <= 0 && NpcCounter <= 0)
+	{
+		NewDay = true;
+	}
+	
+	return NewDay;
+}
+
+
 

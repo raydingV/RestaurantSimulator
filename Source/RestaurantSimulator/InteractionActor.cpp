@@ -12,13 +12,14 @@ AInteractionActor::AInteractionActor()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	RootComponent = MeshComponent;
 
+	FoodTag = 0;
+
 }
 
 // Called when the game starts or when spawned
 void AInteractionActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -33,8 +34,10 @@ void AInteractionActor::FoodObjectCreate()
 
 	if(FoodObject != nullptr)
 	{
-		GetWorld()->SpawnActor<AActor>(FoodObject, GetActorLocation() , GetActorRotation(), SpawnParameters);
-		
+		NewFoodObject = GetWorld()->SpawnActor<AActor>(FoodObject, FVector3d(GetActorLocation().X -50, GetActorLocation().Y + 20, GetActorLocation().Z) , GetActorRotation(), SpawnParameters);
+		FoodObjectClass = Cast<AFoodObject>(NewFoodObject);
+		FoodObjectClass->FoodTag = FoodTag;
+		FoodObjectClass->foodObject->SetStaticMesh(MeshFood);
 	}
 }
 

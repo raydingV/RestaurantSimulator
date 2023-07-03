@@ -23,6 +23,8 @@ public:
 
 	AActor* foodObject;
 
+	int FoodTag;
+
 	float currentTime;
 	float targetRotationZ;
 	

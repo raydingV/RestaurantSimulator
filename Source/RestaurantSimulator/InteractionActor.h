@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FoodObject.h"
 #include "GameFramework/Actor.h"
 #include "InteractionActor.generated.h"
 
@@ -30,11 +31,21 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UClass* FoodObject;
+
+	AActor* NewFoodObject;
+
+	AFoodObject* FoodObjectClass;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMesh* MeshFood;
 	
 	UFUNCTION(BlueprintCallable, Category = "FoodMaker")
 		void FoodObjectCreate();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimationFood")
 	void FoodMakeAnimation();
+
+	UPROPERTY(EditAnywhere)
+	int FoodTag;
 
 };

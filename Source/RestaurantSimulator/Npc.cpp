@@ -30,6 +30,10 @@ void ANpc::BeginPlay()
 	{
 		TargetLocation = FVector3d(TargetLocation.X + 150, 480, 30);
 	}
+
+	OrderFoodTag = FMath::RandRange(0, GameManagerClass->OrderLenght);
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"), OrderFoodTag);
 	
 	TargetRotation = FRotator3d(0,90,0);
 	SetActorRotation(TargetRotation);
@@ -39,7 +43,7 @@ void ANpc::BeginPlay()
 void ANpc::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	if(GameManagerClass->CounterNPC == 1)
 	{
 		TargetLocation = FVector3d(-700, 480, 30);
@@ -53,8 +57,10 @@ void ANpc::Tick(float DeltaTime)
 
 void ANpc::OrderTake()
 {
-	if(PawnClass->takeAway == false)
+	if(PawnClass->takeAway == false && PawnClass->FoodTag == OrderFoodTag)
 	{
+		GameManagerClass->Money += 100;
+		UE_LOG(LogTemp, Warning, TEXT("%d"), GameManagerClass->Money);
 		PawnClass->foodObject->Destroy();
 		PawnClass->CountFood--;
 		GameManagerClass->CounterNPC--;
