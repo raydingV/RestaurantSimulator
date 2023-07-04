@@ -14,13 +14,16 @@ class RESTAURANTSIMULATOR_API AGameManager : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AGameManager();
-
+	
+	FActorSpawnParameters SpawnParams;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int CounterNPC;
 	
 	int Money;
 	int OrderLenght;
 	int MaxNpc;
+	int DayCounter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int DailyNpcSpawn;
@@ -29,10 +32,24 @@ public:
 		void NewDayFunction();
 
 	UFUNCTION(BlueprintCallable, Category = "EndOfDay")
-		bool EndOfDay(int DailyNpc, int NpcCounter);
+		bool EndOfDay(int NpcCounter, int dailyNpc);
 
+	UFUNCTION()
+		void EventFunctions(int Day);
+
+	UPROPERTY(EditAnywhere)
+		TArray<USkeletalMesh*> SkeletalMeshs;
+
+	UPROPERTY(EditAnywhere)
+	TArray<USkeletalMesh*> EventSkeletalMeshs;
+
+	USkeletalMesh* NpcSkeletalMesh;
+	
+	bool Event;
 	bool NewDay;
 
+	AActor* EventNpc;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

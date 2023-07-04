@@ -20,6 +20,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NpcOrderTake")
 		void OrderTake();
 
+	UFUNCTION(BlueprintCallable, Category = "MovementControl")
+		bool IsNpcMoving();
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	USkeletalMeshComponent* SkeletalMesh;
+
 	AActor* Pawn;
 	AActor* GameManager;
 
@@ -28,6 +34,15 @@ public:
 
 	int OrderFoodTag;
 
+	FVector CurrentLocation;
+	FVector Direction;
+	FVector NewLocation;
+
+	float OldLocation;
+
+	bool IsMoving;
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,8 +50,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	FVector TargetLocation;
+	
 	FRotator TargetRotation;
 
 };

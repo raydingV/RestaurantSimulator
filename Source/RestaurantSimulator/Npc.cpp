@@ -11,6 +11,11 @@ ANpc::ANpc()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	IsMoving = true;
+
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	
+	RootComponent = SkeletalMesh;
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +29,8 @@ void ANpc::BeginPlay()
 	GameManager = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
 	GameManagerClass = Cast<AGameManager>(GameManager);
 
+	SkeletalMesh->SetSkeletalMesh(GameManagerClass->NpcSkeletalMesh);
+	
 	TargetLocation = FVector3d(-700, 480, 30);
 	
 	if(GameManagerClass->CounterNPC >= 1)
@@ -37,6 +44,7 @@ void ANpc::BeginPlay()
 	
 	TargetRotation = FRotator3d(0,90,0);
 	SetActorRotation(TargetRotation);
+	
 }
 
 // Called every frame
@@ -49,15 +57,31 @@ void ANpc::Tick(float DeltaTime)
 		TargetLocation = FVector3d(-700, 480, 30);
 	}
 
-	FVector CurrentLocation = GetActorLocation();
-	FVector NewLocation = FMath::VInterpTo(CurrentLocation, TargetLocation, DeltaTime, 0.5f);
-	SetActorLocation(NewLocation);
+	OldLocation = GetActorLocation().X;
+
+	CurrentLocation = GetActorLocation();
+	
+	if(CurrentLocation.X >= TargetLocation.X)
+	{
+		Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
+		NewLocation = CurrentLocation + (Direction * 300 * DeltaTime);
+		SetActorLocation(NewLocation);	
+	}
+	
+	if(OldLocation >= GetActorLocation().X && OldLocation >= TargetLocation.X + 10)
+	{
+		IsMoving = true;
+	}
+	else
+	{
+		IsMoving = false;
+	}
 
 }
 
 void ANpc::OrderTake()
 {
-	if(PawnClass->takeAway == false && PawnClass->FoodTag == OrderFoodTag)
+	if(PawnClass->takeAway == false && PawnClass->FoodTag == OrderFoodTag && GameManagerClass->Event == false)
 	{
 		GameManagerClass->Money += 100;
 		UE_LOG(LogTemp, Warning, TEXT("%d"), GameManagerClass->Money);
@@ -67,5 +91,11 @@ void ANpc::OrderTake()
 		this->Destroy();
 	}
 }
+
+bool ANpc::IsNpcMoving()
+{
+	return IsMoving;
+}
+
 
 
