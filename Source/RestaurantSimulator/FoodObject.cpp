@@ -38,7 +38,7 @@ void AFoodObject::TakeFood()
 	{
 		// SetActorLocation(FVector3d(pawn->GetActorLocation().X + 100, pawn->GetActorLocation().Y, pawn->GetActorLocation().Z - 30 ));
 		this->AttachToActor(pawn, FAttachmentTransformRules::KeepWorldTransform);
-		SetActorRelativeLocation(FVector3d(70,0,-35));
+		SetActorRelativeLocation(FVector3d(70,-40,-35));
 		SetActorRotation(FRotator(0,0,0));
 		pawnClass->foodObject = this;
 		pawnClass->FoodTag = FoodTag;

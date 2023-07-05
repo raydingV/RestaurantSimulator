@@ -24,7 +24,7 @@ public:
 	int OrderLenght;
 	int MaxNpc;
 	int DayCounter;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int DailyNpcSpawn;
 
@@ -34,8 +34,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "EndOfDay")
 		bool EndOfDay(int NpcCounter, int dailyNpc);
 
+	UFUNCTION(BlueprintCallable, Category = "EventFinish")
+		void EventEnd();
+
 	UFUNCTION()
 		void EventFunctions(int Day);
+		
 
 	UPROPERTY(EditAnywhere)
 		TArray<USkeletalMesh*> SkeletalMeshs;
@@ -44,11 +48,41 @@ public:
 	TArray<USkeletalMesh*> EventSkeletalMeshs;
 
 	USkeletalMesh* NpcSkeletalMesh;
-	
-	bool Event;
-	bool NewDay;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool Event;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool NewDay;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool eventNpcInteraction;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool OptionDialogueContinue;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool OptionDialogueChoose;
 
 	AActor* EventNpc;
+
+	UPROPERTY(BlueprintReadOnly)
+		TArray<FText> NpcDialogue;
+	UPROPERTY(BlueprintReadOnly)
+		TArray<FText> OptionChooseDialogue1;
+	UPROPERTY(BlueprintReadOnly)
+		TArray<FText> OptionChooseDialogue2;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FText> OptionChooseDialogue3;
+	UPROPERTY(BlueprintReadOnly)
+		TArray<FText> Option1;
+	UPROPERTY(BlueprintReadOnly)
+		TArray<FText> Option2;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FText> Option3;
+
+
+	FText lastDialogue;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -62,5 +96,6 @@ public:
 		UClass* NpcSpawn;
 
 	float CountDownTimer;
+	float DeltaTimeCounter;
 
 };

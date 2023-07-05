@@ -31,11 +31,11 @@ void ANpc::BeginPlay()
 
 	SkeletalMesh->SetSkeletalMesh(GameManagerClass->NpcSkeletalMesh);
 	
-	TargetLocation = FVector3d(-700, 480, 30);
+	TargetLocation = FVector3d(260, 820, 35);
 	
 	if(GameManagerClass->CounterNPC >= 1)
 	{
-		TargetLocation = FVector3d(TargetLocation.X + 150, 480, 30);
+		TargetLocation = FVector3d(TargetLocation.X + 150, 820, 35);
 	}
 
 	OrderFoodTag = FMath::RandRange(0, GameManagerClass->OrderLenght);
@@ -54,7 +54,7 @@ void ANpc::Tick(float DeltaTime)
 	
 	if(GameManagerClass->CounterNPC == 1)
 	{
-		TargetLocation = FVector3d(-700, 480, 30);
+		TargetLocation = FVector3d(260, 820, 35);
 	}
 
 	OldLocation = GetActorLocation().X;
@@ -81,7 +81,7 @@ void ANpc::Tick(float DeltaTime)
 
 void ANpc::OrderTake()
 {
-	if(PawnClass->takeAway == false && PawnClass->FoodTag == OrderFoodTag && GameManagerClass->Event == false)
+	if(PawnClass->takeAway == false && PawnClass->FoodTag == OrderFoodTag && GameManagerClass->eventNpcInteraction == true)
 	{
 		GameManagerClass->Money += 100;
 		UE_LOG(LogTemp, Warning, TEXT("%d"), GameManagerClass->Money);

@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameManager.h"
 #include "PlayerControllerPawn.generated.h"
+
 
 UCLASS()
 class RESTAURANTSIMULATOR_API APlayerControllerPawn : public APawn
@@ -36,6 +38,9 @@ public:
 	bool takeAway;
 
 	int CountFood;
+	
+	AActor* GameManager;
+	AGameManager* GameManagerClass;
 	
 protected:
 	// Called when the game starts or when spawned

@@ -36,9 +36,5 @@ void AUnlockFood::UnlockFood()
 			UE_LOG(LogTemp, Warning, TEXT("NewFoodUnlocked!"));
 			GameManagerClass->OrderLenght++;
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("!?!?!??!?!?!"));
-		}
 	}
 }

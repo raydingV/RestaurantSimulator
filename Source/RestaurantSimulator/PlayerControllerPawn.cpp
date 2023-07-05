@@ -3,6 +3,8 @@
 
 #include "PlayerControllerPawn.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 APlayerControllerPawn::APlayerControllerPawn()
 {
@@ -17,6 +19,9 @@ APlayerControllerPawn::APlayerControllerPawn()
 void APlayerControllerPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameManager = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
+	GameManagerClass = Cast<AGameManager>(GameManager);
 }
 
 // Called every frame
@@ -47,6 +52,12 @@ void APlayerControllerPawn::Tick(float DeltaTime)
 	{
 		takeAway = true;
 	}
+
+	if(GameManagerClass->eventNpcInteraction == false)
+	{
+		TargetRotation = FRotator(GetActorRotation().Pitch, 0, GetActorRotation().Roll);
+		newRotationSet = true;
+	}
 	
 }
 
@@ -59,7 +70,7 @@ void APlayerControllerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void APlayerControllerPawn::CameraInput(float rotation)
 {
-	if(rotation != 0)
+	if(rotation != 0 && GameManagerClass->eventNpcInteraction == true)
 	{
 		if(rotation < 6.0f && rotation >= 2.0f)
 		{
