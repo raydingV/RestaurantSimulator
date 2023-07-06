@@ -53,6 +53,8 @@ void AGameManager::Tick(float DeltaTime)
 		DailyNpcSpawn--;
 		UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
 	}
+
+	dayText = FString::Printf(TEXT("Day %d"), DayCounter + 1);
 }
 
 void AGameManager::NewDayFunction()
@@ -63,8 +65,8 @@ void AGameManager::NewDayFunction()
 	}
 	DailyNpcSpawn = MaxNpc;
 	UE_LOG(LogTemp, Error, TEXT("New Day!!!!"));
-	DayCounter++;
 	NewDay = false;
+	DayCounter++;
 }
 
 bool AGameManager::EndOfDay(int NpcCounter, int dailyNpc)

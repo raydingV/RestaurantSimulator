@@ -20,15 +20,18 @@ public:
 		UStaticMeshComponent* mesh;
 
 	UFUNCTION(BlueprintCallable, Category = "UnlockNewFood")
-		void UnlockFood();
+		void UnlockFood(int day);
+
+	UFUNCTION()
+		void DisableActorRecursive(AActor* Actor, bool Hide);
 
 	UPROPERTY(EditAnywhere)
 	AActor* GameManager;
 
 	AGameManager* GameManagerClass;
-
+	
 	UPROPERTY(EditAnywhere)
-		int UnlockQue;
+		int UnlockDay;
 
 protected:
 	// Called when the game starts or when spawned

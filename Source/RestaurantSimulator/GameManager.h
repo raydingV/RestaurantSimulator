@@ -24,6 +24,9 @@ public:
 	int OrderLenght;
 	int MaxNpc;
 	int DayCounter;
+
+	UPROPERTY(BlueprintReadOnly)
+		FString dayText;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int DailyNpcSpawn;

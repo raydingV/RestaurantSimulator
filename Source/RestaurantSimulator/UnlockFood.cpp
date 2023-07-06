@@ -10,7 +10,8 @@ AUnlockFood::AUnlockFood()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	UnlockQue = 0;
+
+	DisableActorRecursive(this, false);
 }
 
 // Called when the game starts or when spawned
@@ -18,23 +19,66 @@ void AUnlockFood::BeginPlay()
 {
 	Super::BeginPlay();
 	GameManagerClass = Cast<AGameManager>(GameManager);
+	DisableActorRecursive(this, true);
 }
 
 // Called every frame
 void AUnlockFood::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(GameManagerClass != nullptr)
+	{
+		UnlockFood(GameManagerClass->DayCounter);
+	}
 }
 
-void AUnlockFood::UnlockFood()
+void AUnlockFood::UnlockFood(int day)
 {
-	if (GameManagerClass != nullptr)
+	switch (day)
 	{
-		if (GameManagerClass->Money >= 300 && UnlockQue == GameManagerClass->OrderLenght)
+	case 3:
+		if(UnlockDay == day)
 		{
-			this->Destroy();
-			UE_LOG(LogTemp, Warning, TEXT("NewFoodUnlocked!"));
+			UE_LOG(LogTemp, Error, TEXT("NEW UNLCOK FODD COMING GOTCHA POKEOMONYEENENE"));
+			DisableActorRecursive(this, false);
 			GameManagerClass->OrderLenght++;
+			UnlockDay = 0;	
 		}
+	break;
+
+	case 6:
+		if(UnlockDay == day)
+		{
+			UE_LOG(LogTemp, Error, TEXT("NEW UNLCOK FODD COMING GOTCHA POKEOMONYEENENE"));
+			DisableActorRecursive(this, false);
+			GameManagerClass->OrderLenght++;
+			UnlockDay = 0;	
+		}
+		break;
+
+	case 9:
+		if(UnlockDay == day)
+		{
+			UE_LOG(LogTemp, Error, TEXT("NEW UNLCOK FODD COMING GOTCHA POKEOMONYEENENE"));
+			DisableActorRecursive(this, false);
+			GameManagerClass->OrderLenght++;
+			UnlockDay = 0;	
+		}
+		break;
 	}
+}
+
+void AUnlockFood::DisableActorRecursive(AActor* Actor, bool Hide)
+{
+	TArray<AActor*> AttachedActors;
+	Actor->GetAttachedActors(AttachedActors);
+
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		DisableActorRecursive(AttachedActor, Hide);
+	}
+
+	Actor->SetActorHiddenInGame(Hide);
+	Actor->SetActorEnableCollision(!Hide);
 }
