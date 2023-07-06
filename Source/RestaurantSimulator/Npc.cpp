@@ -85,7 +85,18 @@ void ANpc::OrderTake()
 	{
 		GameManagerClass->Money += 100;
 		UE_LOG(LogTemp, Warning, TEXT("%d"), GameManagerClass->Money);
+
+		
+		TArray<AActor*> ChildActors;
+		PawnClass->foodObject->GetAttachedActors(ChildActors);
+		
+		for (AActor* ChildActor : ChildActors)
+		{
+			ChildActor->Destroy();
+		}
+		
 		PawnClass->foodObject->Destroy();
+		
 		PawnClass->CountFood--;
 		GameManagerClass->CounterNPC--;
 		this->Destroy();

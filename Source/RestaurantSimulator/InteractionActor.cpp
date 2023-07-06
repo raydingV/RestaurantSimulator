@@ -34,10 +34,10 @@ void AInteractionActor::FoodObjectCreate()
 
 	if(FoodObject != nullptr)
 	{
-		NewFoodObject = GetWorld()->SpawnActor<AActor>(FoodObject, FVector3d(GetActorLocation().X -50, GetActorLocation().Y + 20, GetActorLocation().Z) , GetActorRotation(), SpawnParameters);
+		NewFoodObject = GetWorld()->SpawnActor<AActor>(FoodObject, FVector3d(GetActorLocation().X + FoodSpawnLocation.X, GetActorLocation().Y + FoodSpawnLocation.Y, GetActorLocation().Z + FoodSpawnLocation.Z) , FoodSpawnRotation, SpawnParameters);
 		FoodObjectClass = Cast<AFoodObject>(NewFoodObject);
 		FoodObjectClass->FoodTag = FoodTag;
-		FoodObjectClass->foodObject->SetStaticMesh(MeshFood);
+		FoodObjectClass->Mesh->SetStaticMesh(MeshFood);
 	}
 }
 

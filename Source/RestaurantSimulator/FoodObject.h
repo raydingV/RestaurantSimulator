@@ -17,7 +17,10 @@ public:
 	AFoodObject();
 
 	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* foodObject;
+		UStaticMeshComponent* Mesh;
+	
+	UPROPERTY(EditAnywhere)
+		TArray<UStaticMeshComponent*> foodObject;
 
 	UFUNCTION(BlueprintCallable, Category = "FoodInteraction")
 		void TakeFood();
@@ -31,6 +34,8 @@ public:
 	APlayerControllerPawn* pawnClass;
 
 	int FoodTag;
+	
+	void IngredientAdderFunction(AActor* actor, FVector3d newSpawnLocation);
 
 protected:
 	// Called when the game starts or when spawned

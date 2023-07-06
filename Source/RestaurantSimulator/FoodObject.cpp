@@ -12,8 +12,9 @@ AFoodObject::AFoodObject()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	foodObject = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	RootComponent = foodObject;
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	
+	RootComponent = Mesh;
 }
 
 // Called when the game starts or when spawned
@@ -22,7 +23,6 @@ void AFoodObject::BeginPlay()
 	Super::BeginPlay();
 	pawn = Cast<APlayerControllerPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerControllerPawn::StaticClass()));
 	pawnClass = Cast<APlayerControllerPawn>(pawn);
-	
 }
 
 // Called every frame
@@ -57,6 +57,17 @@ void AFoodObject::ReleaseFood(FKey key)
 	// 	this->Destroy();
 	// }
 }
+
+void AFoodObject::IngredientAdderFunction(AActor* actor, FVector3d newSpawnLocation)
+{
+	// Ingredient = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	// foodObject.Add(Ingredient);
+	// foodObject.Last()->SetStaticMesh(Ingredient->GetStaticMesh());
+
+	actor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+	actor->SetActorRelativeLocation(FVector3d(0 + newSpawnLocation.X,0 + newSpawnLocation.Y,0 + newSpawnLocation.Z));
+}
+
 
 
 

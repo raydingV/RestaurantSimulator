@@ -48,4 +48,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	int FoodTag;
 
+	UPROPERTY(EditAnywhere)
+		FVector3d FoodSpawnLocation;
+
+	UPROPERTY(EditAnywhere)
+		FRotator3d FoodSpawnRotation;
+
 };
