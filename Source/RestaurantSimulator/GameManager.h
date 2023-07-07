@@ -24,6 +24,7 @@ public:
 	int OrderLenght;
 	int MaxNpc;
 	int DayCounter;
+	int UnlockMeat;
 
 	UPROPERTY(BlueprintReadOnly)
 		FString dayText;
@@ -52,7 +53,7 @@ public:
 
 	USkeletalMesh* NpcSkeletalMesh;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 		bool Event;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -86,6 +87,13 @@ public:
 
 
 	FText lastDialogue;
+
+	UPROPERTY(EditAnywhere)
+		TArray<bool>ControlIngredients;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool FireDay;
+
 	
 protected:
 	// Called when the game starts or when spawned

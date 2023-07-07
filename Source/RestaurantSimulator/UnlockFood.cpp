@@ -37,17 +37,18 @@ void AUnlockFood::UnlockFood(int day)
 {
 	switch (day)
 	{
-	case 3:
+	case 4:
 		if(UnlockDay == day)
 		{
 			UE_LOG(LogTemp, Error, TEXT("NEW UNLCOK FODD COMING GOTCHA POKEOMONYEENENE"));
 			DisableActorRecursive(this, false);
 			GameManagerClass->OrderLenght++;
+			GameManagerClass->UnlockMeat++;
 			UnlockDay = 0;	
 		}
 	break;
 
-	case 6:
+	case 7:
 		if(UnlockDay == day)
 		{
 			UE_LOG(LogTemp, Error, TEXT("NEW UNLCOK FODD COMING GOTCHA POKEOMONYEENENE"));
@@ -57,7 +58,7 @@ void AUnlockFood::UnlockFood(int day)
 		}
 		break;
 
-	case 9:
+	case 10:
 		if(UnlockDay == day)
 		{
 			UE_LOG(LogTemp, Error, TEXT("NEW UNLCOK FODD COMING GOTCHA POKEOMONYEENENE"));

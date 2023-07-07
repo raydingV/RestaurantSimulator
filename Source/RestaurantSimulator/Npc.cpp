@@ -38,12 +38,103 @@ void ANpc::BeginPlay()
 		TargetLocation = FVector3d(TargetLocation.X + 150, 820, 35);
 	}
 
-	OrderFoodTag = FMath::RandRange(0, GameManagerClass->OrderLenght);
+	OrderFoodTag = FMath::RandRange(0, GameManagerClass->UnlockMeat);
+	BreadOrPlate = FMath::RandRange(0,1);
 
-	UE_LOG(LogTemp, Warning, TEXT("%d"), OrderFoodTag);
+	UE_LOG(LogTemp, Error, TEXT("%d"), BreadOrPlate);
 	
 	TargetRotation = FRotator3d(0,90,0);
 	SetActorRotation(TargetRotation);
+
+	OrderReady = false;
+
+	switch (GameManagerClass->OrderLenght)
+	{
+		case 1:
+			FoodOrder[0] = true;
+			UE_LOG(LogTemp, Error, TEXT("Case1"));
+			break;
+
+		case 2:
+			for(int i = 0; i < FoodOrder.Num() - 3; i++)
+			{
+				TrueOrFalse = FMath::RandRange(0,1);
+				if(TrueOrFalse == 1)
+				{
+					FoodOrder[i] = true;	
+				}
+				else
+				{
+					FoodOrder[i] = false;
+				}
+			}
+			if(BreadOrPlate == 0)
+			{
+				FoodOrder.Last() = false;
+			}
+			UE_LOG(LogTemp, Error, TEXT("Case2"));
+			break;
+
+		case 3:
+			for(int i = 0; i < FoodOrder.Num() - 1; i++)
+			{
+				TrueOrFalse = FMath::RandRange(0,1);
+				if(TrueOrFalse == 1)
+				{
+					FoodOrder[i] = true;	
+				}
+				else
+				{
+					FoodOrder[i] = false;
+				}
+			}
+		UE_LOG(LogTemp, Error, TEXT("Case3"));
+		if(OrderFoodTag == 0)
+		{
+			FoodOrder[0] = true;
+			FoodOrder[5] = false;
+		}
+		else
+		{
+			FoodOrder[5] = true;
+			FoodOrder[0] = false;
+		}
+		if(BreadOrPlate == 0)
+		{
+			FoodOrder.Last() = false;
+		}
+		break;
+
+		case 4:
+		for(int i = 0; i < FoodOrder.Num(); i++)
+		{
+			TrueOrFalse = FMath::RandRange(0,1);
+			if(TrueOrFalse == 1)
+			{
+				FoodOrder[i] = true;	
+			}
+			else
+			{
+				FoodOrder[i] = false;
+			}
+		}
+		UE_LOG(LogTemp, Error, TEXT("Case3"));
+		if(OrderFoodTag == 0)
+		{
+			FoodOrder[0] = true;
+			FoodOrder[5] = false;
+		}
+		else
+		{
+			FoodOrder[5] = true;
+			FoodOrder[0] = false;
+		}
+		if(BreadOrPlate == 0)
+		{
+			FoodOrder.Last() = false;
+		}
+		break;
+	}
 	
 }
 
@@ -81,7 +172,26 @@ void ANpc::Tick(float DeltaTime)
 
 void ANpc::OrderTake()
 {
-	if(PawnClass->takeAway == false && PawnClass->FoodTag == OrderFoodTag && GameManagerClass->eventNpcInteraction == true)
+	for(int i = 0; i < FoodOrder.Num(); i++)
+	{
+		if(GameManagerClass->ControlIngredients[i] == FoodOrder[i])
+		{
+			OrderReady = true;
+		}
+		else
+		{
+			OrderReady = false;
+			UE_LOG(LogTemp, Error, TEXT("OrderReady = false"));
+			break;
+		}
+	}
+
+	if(PawnClass->FoodTag == BreadOrPlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("FoodTag is True"));
+	}
+	
+	if(PawnClass->takeAway == false && GameManagerClass->eventNpcInteraction == true && OrderReady == true && PawnClass->FoodTag == BreadOrPlate)
 	{
 		GameManagerClass->Money += 100;
 		UE_LOG(LogTemp, Warning, TEXT("%d"), GameManagerClass->Money);
@@ -93,6 +203,11 @@ void ANpc::OrderTake()
 		for (AActor* ChildActor : ChildActors)
 		{
 			ChildActor->Destroy();
+		}
+
+		for (int i = 0; i < GameManagerClass->ControlIngredients.Num(); i++)
+		{
+			GameManagerClass->ControlIngredients[i] = false;
 		}
 		
 		PawnClass->foodObject->Destroy();

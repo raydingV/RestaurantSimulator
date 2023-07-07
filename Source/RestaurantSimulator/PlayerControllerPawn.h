@@ -41,6 +41,8 @@ public:
 	
 	AActor* GameManager;
 	AGameManager* GameManagerClass;
+
+	bool InputEnable;
 	
 protected:
 	// Called when the game starts or when spawned

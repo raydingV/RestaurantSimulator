@@ -33,6 +33,8 @@ public:
 	AGameManager* GameManagerClass;
 
 	int OrderFoodTag;
+	int TrueOrFalse;
+	int BreadOrPlate;
 
 	FVector CurrentLocation;
 	FVector Direction;
@@ -41,6 +43,11 @@ public:
 	float OldLocation;
 
 	bool IsMoving;
+
+	UPROPERTY(EditAnywhere)
+		TArray<bool>FoodOrder;
+
+	bool OrderReady;
 	
 
 protected:

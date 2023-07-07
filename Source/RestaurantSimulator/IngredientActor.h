@@ -7,6 +7,7 @@
 #include "IngredientObject.h"
 #include "PlayerControllerPawn.h"
 #include "GameFramework/Actor.h"
+#include "GameManager.h"
 #include "IngredientActor.generated.h"
 
 UCLASS()
@@ -18,6 +19,10 @@ public:
 	// Sets default values for this actor's properties
 	AIngredientActor();
 
+	UPROPERTY(EditAnywhere)
+	AActor* GameManager;
+	AGameManager* GameManagerClass;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		bool HaveAnimation;
 	
@@ -52,7 +57,16 @@ public:
 		FVector3d NewSpawnLocation;
 
 	UPROPERTY(EditAnywhere)
-		float ScaleSpawn;
+		FVector3d ScaleSpawn;
+
+	UPROPERTY(EditAnywhere)
+		int thisFoodTag;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool InputEnable;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool AnimationFinish;
 
 protected:
 	// Called when the game starts or when spawned

@@ -18,13 +18,15 @@ void AGameManager::BeginPlay()
 	Super::BeginPlay();
 	CounterNPC = 0;
 	Money = 0;
-	OrderLenght = 0;
+	OrderLenght = 1;
 	MaxNpc = 6;
 	DailyNpcSpawn = MaxNpc;
 	NewDay = false;
 	DayCounter = 1;
 	eventNpcInteraction = true;
 	OptionDialogueContinue = false;
+	UnlockMeat = 0;
+	FireDay = false;
 }
 
 // Called every frame
@@ -54,6 +56,11 @@ void AGameManager::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
 	}
 
+	if(NewDay && DayCounter == 5)
+	{
+		FireDay = true;
+	}
+	
 	dayText = FString::Printf(TEXT("Day %d"), DayCounter + 1);
 }
 

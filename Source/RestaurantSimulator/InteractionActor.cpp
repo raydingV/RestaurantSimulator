@@ -3,6 +3,8 @@
 
 #include "InteractionActor.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 AInteractionActor::AInteractionActor()
 {
@@ -20,6 +22,9 @@ AInteractionActor::AInteractionActor()
 void AInteractionActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Pawn = Cast<APlayerControllerPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerControllerPawn::StaticClass()));
+	PawnClass = Cast<APlayerControllerPawn>(Pawn);
 }
 
 // Called every frame

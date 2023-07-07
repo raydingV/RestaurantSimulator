@@ -12,6 +12,8 @@ AIngredientActor::AIngredientActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	InputEnable = true;
+	AnimationFinish = false;
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +23,9 @@ void AIngredientActor::BeginPlay()
 
 	PawnActor = Cast<APlayerControllerPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerControllerPawn::StaticClass()));
 	PawnClass = Cast<APlayerControllerPawn>(PawnActor);
+
+	GameManager = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
+	GameManagerClass = Cast<AGameManager>(GameManager);
 }
 
 // Called every frame
@@ -28,21 +33,41 @@ void AIngredientActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if(HaveAnimation == true && InputEnable == false)
+	{
+		PawnClass->InputEnable = InputEnable;
+	}
+
+	if(AnimationFinish == true)
+	{
+		AnimationFinish = false;
+		InputEnable = true;
+		PawnClass->InputEnable = InputEnable;
+	}
 }
 
 void AIngredientActor::AddInFood()
 {
 	FoodObjectActor = PawnClass->foodObject;
-	FoodObjectClass = Cast<AFoodObject>(FoodObjectActor);
+	GameManagerClass->ControlIngredients[thisFoodTag] = true;
 
 	if(FoodObjectActor != nullptr)
 	{
+		FoodObjectClass = Cast<AFoodObject>(FoodObjectActor);	
+	}
+
+	if(FoodObjectClass != nullptr)
+	{
 		NewSpawnObject = GetWorld()->SpawnActor<AActor>(IngredientObject, GetActorLocation(), GetActorRotation(), SpawnParameters);
-		NewSpawnObject->SetActorScale3D(FVector3d(ScaleSpawn, ScaleSpawn, ScaleSpawn));
+		NewSpawnObject->SetActorScale3D(ScaleSpawn);
 		IngredientClass = Cast<AIngredientObject>(NewSpawnObject);
 		IngredientClass->Mesh->SetStaticMesh(SpawnMesh);
 		FoodObjectClass->IngredientAdderFunction(NewSpawnObject, NewSpawnLocation);
-		NewSpawnObject->SetActorRotation(NewSpawnRotator);
+
+		if(PawnClass->FoodTag == 0)
+		{
+			NewSpawnObject->SetActorRotation(NewSpawnRotator);
+		}
 	}
 }
 

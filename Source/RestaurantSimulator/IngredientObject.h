@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameManager.h"
 #include "GameFramework/Actor.h"
 #include "IngredientObject.generated.h"
 

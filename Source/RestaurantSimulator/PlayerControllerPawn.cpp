@@ -13,6 +13,7 @@ APlayerControllerPawn::APlayerControllerPawn()
 	newRotationSet = false;
 	takeAway = true;
 	CountFood = 0;
+	InputEnable = true;
 }
 
 // Called when the game starts or when spawned
@@ -53,12 +54,11 @@ void APlayerControllerPawn::Tick(float DeltaTime)
 		takeAway = true;
 	}
 
-	if(GameManagerClass->eventNpcInteraction == false)
+	if(GameManagerClass->eventNpcInteraction == false && GameManagerClass->FireDay == true)
 	{
 		TargetRotation = FRotator(GetActorRotation().Pitch, 0, GetActorRotation().Roll);
 		newRotationSet = true;
 	}
-	
 }
 
 // Called to bind functionality to input
@@ -70,7 +70,7 @@ void APlayerControllerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void APlayerControllerPawn::CameraInput(float rotation)
 {
-	if(rotation != 0 && GameManagerClass->eventNpcInteraction == true)
+	if(rotation != 0 && GameManagerClass->eventNpcInteraction == true && InputEnable == true && GameManagerClass->FireDay == false)
 	{
 		if(rotation < 6.0f && rotation >= 2.0f)
 		{
