@@ -56,7 +56,7 @@ void AGameManager::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
 	}
 
-	if(NewDay && DayCounter == 5)
+	if(NewDay && DayCounter == 2)
 	{
 		FireDay = true;
 	}

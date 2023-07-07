@@ -30,6 +30,9 @@ public:
 		UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere)
+		USkeletalMeshComponent* SkeletalMesh;
+
+	UPROPERTY(EditAnywhere)
 		UStaticMesh* SpawnMesh;
 
 	AActor* FoodObjectActor;

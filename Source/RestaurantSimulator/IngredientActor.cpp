@@ -12,6 +12,8 @@ AIngredientActor::AIngredientActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	
 	InputEnable = true;
 	AnimationFinish = false;
 }
