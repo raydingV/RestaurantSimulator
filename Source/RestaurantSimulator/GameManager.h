@@ -43,6 +43,9 @@ public:
 
 	UFUNCTION()
 		void EventFunctions(int Day);
+
+	UFUNCTION(BlueprintCallable)
+		FText NpcOrderQuoteFunction();
 		
 
 	UPROPERTY(EditAnywhere)
@@ -68,32 +71,48 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		bool OptionDialogueChoose;
 
+	UPROPERTY(BlueprintReadWrite)
+		bool FireDay;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool NpcCanOrder;
+
+	UPROPERTY(EditAnywhere)
+	TArray<bool>ControlIngredients;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool GetFireEventOne;
+
 	AActor* EventNpc;
 
 	UPROPERTY(BlueprintReadOnly)
 		TArray<FText> NpcDialogue;
+	
 	UPROPERTY(BlueprintReadOnly)
 		TArray<FText> OptionChooseDialogue1;
+	
 	UPROPERTY(BlueprintReadOnly)
 		TArray<FText> OptionChooseDialogue2;
+	
 	UPROPERTY(BlueprintReadOnly)
-	TArray<FText> OptionChooseDialogue3;
+		TArray<FText> OptionChooseDialogue3;
+	
 	UPROPERTY(BlueprintReadOnly)
 		TArray<FText> Option1;
+	
 	UPROPERTY(BlueprintReadOnly)
 		TArray<FText> Option2;
+	
 	UPROPERTY(BlueprintReadOnly)
-	TArray<FText> Option3;
+		TArray<FText> Option3;
 
+	UPROPERTY(BlueprintReadOnly)
+		TArray<FText> GetFoodNames;
+
+	UPROPERTY(BlueprintReadOnly)
+		FText NpcOrderQutoe;
 
 	FText lastDialogue;
-
-	UPROPERTY(EditAnywhere)
-		TArray<bool>ControlIngredients;
-
-	UPROPERTY(BlueprintReadWrite)
-		bool FireDay;
-
 	
 protected:
 	// Called when the game starts or when spawned

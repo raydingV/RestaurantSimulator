@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		TArray<bool>FoodOrder;
 
+	UPROPERTY(EditAnywhere)
+		TArray<FText>FoodNames;
+
 	bool OrderReady;
 	
 

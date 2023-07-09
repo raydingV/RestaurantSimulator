@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FoodObject.h"
+#include "GameManager.h"
 #include "GameFramework/Actor.h"
 #include "InteractionActor.generated.h"
 
@@ -17,8 +18,10 @@ public:
 	AInteractionActor();
 
 	AActor* Pawn;
-
 	APlayerControllerPawn* PawnClass;
+
+	AActor* GameManager;
+	AGameManager* GameManagerClass;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,9 +49,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FoodMaker")
 		void FoodObjectCreate();
 
-	UFUNCTION(BlueprintCallable, Category = "AnimationFood")
-	void FoodMakeAnimation();
-
+	UFUNCTION(BlueprintCallable, Category = "TrashFood")
+		void DeleteFood();
+	
 	UPROPERTY(EditAnywhere)
 	int FoodTag;
 
@@ -57,5 +60,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		FRotator3d FoodSpawnRotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool IsItTrash;
 
 };

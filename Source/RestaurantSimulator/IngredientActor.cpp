@@ -10,9 +10,8 @@ AIngredientActor::AIngredientActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	
 	InputEnable = true;
 	AnimationFinish = false;
@@ -46,6 +45,8 @@ void AIngredientActor::Tick(float DeltaTime)
 		InputEnable = true;
 		PawnClass->InputEnable = InputEnable;
 	}
+	
+	takeAway = PawnClass->takeAway;	
 }
 
 void AIngredientActor::AddInFood()

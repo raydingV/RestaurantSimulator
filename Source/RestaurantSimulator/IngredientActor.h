@@ -30,9 +30,6 @@ public:
 		UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere)
-		USkeletalMeshComponent* SkeletalMesh;
-
-	UPROPERTY(EditAnywhere)
 		UStaticMesh* SpawnMesh;
 
 	AActor* FoodObjectActor;
@@ -70,6 +67,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 		bool AnimationFinish;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool IsDonerAnim;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool takeAway;
 
 protected:
 	// Called when the game starts or when spawned

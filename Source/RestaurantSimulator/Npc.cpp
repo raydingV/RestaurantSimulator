@@ -16,6 +16,7 @@ ANpc::ANpc()
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	
 	RootComponent = SkeletalMesh;
+	
 }
 
 // Called when the game starts or when spawned
@@ -73,6 +74,7 @@ void ANpc::BeginPlay()
 				FoodOrder.Last() = false;
 			}
 			UE_LOG(LogTemp, Error, TEXT("Case2"));
+			FoodOrder[0] = true;
 			break;
 
 		case 3:
@@ -168,6 +170,29 @@ void ANpc::Tick(float DeltaTime)
 		IsMoving = false;
 	}
 
+	if(GetActorLocation().X <= 270 && GameManagerClass->NpcCanOrder == true && GameManagerClass->Event == true)
+	{
+		if(BreadOrPlate == 0)
+		{
+			GameManagerClass->GetFoodNames.Add(FText::FromString("Wrap with"));
+		}
+		else
+		{
+			GameManagerClass->GetFoodNames.Add(FText::FromString("On Plate with"));
+		}
+	
+		for (int i = 0; i < FoodOrder.Num(); i++)
+		{
+			if(FoodOrder[i] == true)
+			{
+				GameManagerClass->GetFoodNames.Add(FoodNames[i]);
+
+			}
+		}
+
+		GameManagerClass->NpcCanOrder = false;
+	}
+
 }
 
 void ANpc::OrderTake()
@@ -214,6 +239,10 @@ void ANpc::OrderTake()
 		
 		PawnClass->CountFood--;
 		GameManagerClass->CounterNPC--;
+		GameManagerClass->GetFoodNames.Empty();
+		GameManagerClass->GetFoodNames.SetNum(0);
+		GameManagerClass->NpcOrderQutoe = FText::FromString("");
+		GameManagerClass->NpcCanOrder = true;
 		this->Destroy();
 	}
 }

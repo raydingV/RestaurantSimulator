@@ -25,6 +25,9 @@ void AInteractionActor::BeginPlay()
 
 	Pawn = Cast<APlayerControllerPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerControllerPawn::StaticClass()));
 	PawnClass = Cast<APlayerControllerPawn>(Pawn);
+
+	GameManager = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
+	GameManagerClass = Cast<AGameManager>(GameManager);
 }
 
 // Called every frame
@@ -46,10 +49,27 @@ void AInteractionActor::FoodObjectCreate()
 	}
 }
 
-void AInteractionActor::FoodMakeAnimation()
+void AInteractionActor::DeleteFood()
 {
+
+	if(PawnClass->takeAway == false)
+	{
+		TArray<AActor*> ChildActors;
+		PawnClass->foodObject->GetAttachedActors(ChildActors);
+		
+		for (AActor* ChildActor : ChildActors)
+		{
+			ChildActor->Destroy();
+		}
+
+		for (int i = 0; i < GameManagerClass->ControlIngredients.Num(); i++)
+		{
+			GameManagerClass->ControlIngredients[i] = false;
+		}
 	
+		PawnClass->foodObject->Destroy();
+		
+		PawnClass->CountFood--;	
+	}
 }
-
-
 

@@ -27,6 +27,8 @@ void AGameManager::BeginPlay()
 	OptionDialogueContinue = false;
 	UnlockMeat = 0;
 	FireDay = false;
+	NpcCanOrder = true;
+	GetFireEventOne = true;
 }
 
 // Called every frame
@@ -56,7 +58,7 @@ void AGameManager::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
 	}
 
-	if(NewDay && DayCounter == 2)
+	if(NewDay == true && DayCounter == 5 && OptionDialogueChoose == true)
 	{
 		FireDay = true;
 	}
@@ -82,7 +84,6 @@ bool AGameManager::EndOfDay(int NpcCounter, int dailyNpc)
 	{
 		NewDay = true;
 	}
-
 	return NewDay;
 }
 
@@ -335,7 +336,7 @@ void AGameManager::EventFunctions(int Day)
 		break;
 
 	case 8:
-		if (DailyNpcSpawn == 8)
+		if (DailyNpcSpawn == 8 && GetFireEventOne == false)
 		{
 			Event = false;
 			if (CounterNPC <= 0)
@@ -458,3 +459,22 @@ void AGameManager::EventEnd()
 	Option3.SetNum(0);
 	EventNpc->Destroy();
 }
+
+FText AGameManager::NpcOrderQuoteFunction()
+{
+	if (Event && GetFoodNames.Num() > 0)
+	{
+		FString FormattedString;
+		
+		for (int i = 0; i < GetFoodNames.Num(); i++)
+		{
+			FString FoodName = GetFoodNames[i].ToString();
+			FormattedString += FString::Printf(TEXT(" %s"), *FoodName);
+		}
+
+		NpcOrderQutoe = FText::FromString(FormattedString);
+	}
+
+	return NpcOrderQutoe;
+}
+
