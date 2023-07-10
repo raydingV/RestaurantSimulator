@@ -72,14 +72,14 @@ void APlayerControllerPawn::CameraInput(float rotation)
 {
 	if(rotation != 0 && GameManagerClass->eventNpcInteraction == true && InputEnable == true && GameManagerClass->FireDay == false)
 	{
-		if(rotation < 6.0f && rotation >= 2.0f)
+		if(rotation < 4.0f && rotation >= 1.0f)
 		{
 			targetRotationZ = -90;
 			TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
 			newRotationSet = true;	
 		}
 	
-		if(rotation >= 6.0f)
+		if(rotation >= 4.0f)
 		{
 			targetRotationZ = 90;
 			TargetRotation = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + targetRotationZ, GetActorRotation().Roll);
