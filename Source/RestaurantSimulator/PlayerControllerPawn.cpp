@@ -59,6 +59,12 @@ void APlayerControllerPawn::Tick(float DeltaTime)
 		TargetRotation = FRotator(GetActorRotation().Pitch, 0, GetActorRotation().Roll);
 		newRotationSet = true;
 	}
+
+	if(GameManagerClass->eventNpcInteraction == false )
+	{
+		TargetRotation = FRotator(GetActorRotation().Pitch, 0, GetActorRotation().Roll);
+		newRotationSet = true;
+	}
 }
 
 // Called to bind functionality to input

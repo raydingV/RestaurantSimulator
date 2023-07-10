@@ -37,6 +37,17 @@ void AIngredientActor::Tick(float DeltaTime)
 	if(HaveAnimation == true && InputEnable == false)
 	{
 		PawnClass->InputEnable = InputEnable;
+
+		if(IsDonerAnim == true)
+		{
+			PawnClass->TargetRotation = FRotator(GetActorRotation().Pitch, -90, GetActorRotation().Roll);
+			PawnClass->newRotationSet = true;
+		}
+		else
+		{
+			PawnClass->TargetRotation = FRotator(GetActorRotation().Pitch, 90, GetActorRotation().Roll);
+			PawnClass->newRotationSet = true;
+		}
 	}
 
 	if(AnimationFinish == true)
@@ -46,7 +57,8 @@ void AIngredientActor::Tick(float DeltaTime)
 		PawnClass->InputEnable = InputEnable;
 	}
 	
-	takeAway = PawnClass->takeAway;	
+	takeAway = PawnClass->takeAway;
+	
 }
 
 void AIngredientActor::AddInFood()
