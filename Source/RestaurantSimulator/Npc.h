@@ -51,15 +51,21 @@ public:
 
 	float OldLocation;
 
+	UPROPERTY(BlueprintReadOnly)
+		float PatienceTimer;
+
 	bool IsMoving;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool Inline;
+
+	bool OrderReady;
 
 	UPROPERTY(EditAnywhere)
 		TArray<bool>FoodOrder;
 
 	UPROPERTY(EditAnywhere)
 		TArray<FText>FoodNames;
-
-	bool OrderReady;
 	
 
 protected:

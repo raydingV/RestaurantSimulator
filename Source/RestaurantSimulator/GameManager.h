@@ -20,8 +20,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int CounterNPC;
+
+	UPROPERTY(EditAnywhere)
+		float Currency;
 	
-	float Currency;
 	float Profit;
 	
 	int OrderLenght;

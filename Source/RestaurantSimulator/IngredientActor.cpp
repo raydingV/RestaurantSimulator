@@ -18,10 +18,7 @@ AIngredientActor::AIngredientActor()
 	AnimationFinish = false;
 	Cost = 0;
 	Profit = 0;
-
-	CostTextLocation = GetActorLocation();
-	CostTextRotation = GetActorRotation();
-	CostTextScale = FVector3d(1,1,1);
+	
 }
 
 // Called when the game starts or when spawned
@@ -89,12 +86,12 @@ void AIngredientActor::AddInFood()
 		if(PawnClass->FoodTag == 0)
 		{
 			NewSpawnObject->SetActorRotation(NewSpawnRotator);
-
-			GameManagerClass->Currency -= Cost;
-			GameManagerClass->Profit += Profit;
-
-			GameManagerClass->SpawnText(Cost, CostTextLocation, CostTextRotation, CostTextScale, FColor::Red);
 		}
+
+		GameManagerClass->Currency -= Cost;
+		GameManagerClass->Profit += Profit;
+
+		GameManagerClass->SpawnText(Cost, CostTextLocation, CostTextRotation, CostTextScale, FColor::Red);
 	}
 }
 

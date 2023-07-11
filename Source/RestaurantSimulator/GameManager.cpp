@@ -10,20 +10,21 @@ AGameManager::AGameManager()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Event = true;
+	
+	DayCounter = 1;
+	Currency = 100;
 }
 
 // Called when the game starts or when spawned
 void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	CounterNPC = 0;
-	Currency = 100;
 	Profit = 0;
 	OrderLenght = 1;
 	MaxNpc = 6;
 	DailyNpcSpawn = MaxNpc;
 	NewDay = false;
-	DayCounter = 1;
+	CounterNPC = 0;
 	eventNpcInteraction = true;
 	OptionDialogueContinue = false;
 	UnlockMeat = 0;

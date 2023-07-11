@@ -18,6 +18,8 @@ ANpc::ANpc()
 	RootComponent = SkeletalMesh;
 	
 	ProfitTextScale = FVector3d(1,1,1);
+
+	PatienceTimer = 1.0f;
 	
 }
 
@@ -195,6 +197,15 @@ void ANpc::Tick(float DeltaTime)
 		GameManagerClass->NpcCanOrder = false;
 	}
 
+	if(GetActorLocation().X <= 430 && GameManagerClass->Event == true)
+	{
+		PatienceTimer -= DeltaTime / 30.0f;
+		Inline = true;
+	}
+	else if(GetActorLocation().X <= 270 && GameManagerClass->Event == true)
+	{
+		PatienceTimer -= DeltaTime / 15.0f;
+	}
 }
 
 void ANpc::OrderTake()
