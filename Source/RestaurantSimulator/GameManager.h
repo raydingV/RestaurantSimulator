@@ -57,8 +57,10 @@ public:
 
 	UFUNCTION()
 		void SpawnText(float Value, FVector Location, FRotator3d Rotation, FVector Scale, FColor Color);
-		
 
+	UFUNCTION()
+		void GameOverFunction(bool GameOver);
+	
 	UPROPERTY(EditAnywhere)
 		TArray<USkeletalMesh*> SkeletalMeshs;
 
@@ -85,7 +87,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		bool FireDay;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 		bool NpcCanOrder;
 
 	UPROPERTY(EditAnywhere)
@@ -93,6 +95,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 		bool GetFireEventOne;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool GameOver;
+
+	bool GameOverSpawn;
 
 	AActor* EventNpc;
 

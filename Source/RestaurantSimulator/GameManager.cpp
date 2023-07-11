@@ -10,9 +10,11 @@ AGameManager::AGameManager()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Event = true;
-	
+
+	GameOver = false;
 	DayCounter = 1;
 	Currency = 100;
+	GameOverSpawn = false;
 }
 
 // Called when the game starts or when spawned
@@ -40,9 +42,23 @@ void AGameManager::Tick(float DeltaTime)
 
 	CountDownTimer -= DeltaTime * 300;
 
+	if(Currency <= 0)
+	{
+		GameOver = true;
+	}
+	else if(Currency >= 0)
+	{
+		GameOver = false;
+	}
+
 	if (CountDownTimer <= 0)
 	{
 		EventFunctions(DayCounter);
+	}
+	
+	if(CountDownTimer <= 0)
+	{
+		GameOverFunction(GameOver);	
 	}
 
 	if (CounterNPC >= 2)
@@ -69,6 +85,28 @@ void AGameManager::Tick(float DeltaTime)
 
 	CurrencyText = FText::Format(FText::FromString("{0} $"), FText::AsNumber(Currency));
 }
+
+void AGameManager::GameOverFunction(bool _GameOver)
+{
+	if(_GameOver == true)
+	{
+		if(DailyNpcSpawn == 1)
+		{
+			Event = false;
+			if(CounterNPC <= 0)
+			{
+				eventNpcInteraction = false;
+				NpcDialogue.Add(FText::FromString("EZIK GAME OVER OLDU HAHA"));
+				
+				NpcSkeletalMesh = EventSkeletalMeshs[0];
+				EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
+				CounterNPC++;
+				DailyNpcSpawn--;
+			}
+		}
+	}
+}
+
 
 void AGameManager::NewDayFunction()
 {
@@ -118,7 +156,7 @@ void AGameManager::EventFunctions(int Day)
 		break;
 
 	case 2:
-		if (DailyNpcSpawn == 1)
+		if (DailyNpcSpawn == 1 && GameOver == false)
 		{
 			Event = false;
 			if (CounterNPC <= 0)
@@ -175,7 +213,7 @@ void AGameManager::EventFunctions(int Day)
 			}
 		}
 
-		if (DailyNpcSpawn == 1)
+		if (DailyNpcSpawn == 1 && GameOver == false)
 		{
 			Event = false;
 			if (CounterNPC <= 0)
@@ -286,7 +324,7 @@ void AGameManager::EventFunctions(int Day)
 			}
 		}
 
-		if (DailyNpcSpawn == 1)
+		if (DailyNpcSpawn == 1 && GameOver == false)
 		{
 			Event = false;
 			if (CounterNPC <= 0)
@@ -417,7 +455,7 @@ void AGameManager::EventFunctions(int Day)
 			}
 		}
 
-		if (DailyNpcSpawn == 1)
+		if (DailyNpcSpawn == 1 && GameOver == false)
 		{
 			Event = false;
 			if (CounterNPC <= 0)
