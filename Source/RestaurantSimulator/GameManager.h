@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TextActor.h"
 #include "GameFramework/Actor.h"
 #include "GameManager.generated.h"
 
@@ -20,10 +21,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int CounterNPC;
 	
-	int Money;
+	float Currency;
+	float Profit;
+	
 	int OrderLenght;
 	int MaxNpc;
-	int DayCounter;
+
+	UPROPERTY(EditAnywhere)
+		int DayCounter;
+	
 	int UnlockMeat;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -46,6 +52,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		FText NpcOrderQuoteFunction();
+
+	UFUNCTION()
+		void SpawnText(float Value, FVector Location, FRotator3d Rotation, FVector Scale, FColor Color);
 		
 
 	UPROPERTY(EditAnywhere)
@@ -112,6 +121,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		FText NpcOrderQutoe;
 
+	UPROPERTY(BlueprintReadOnly)
+		FText CurrencyText;
+
 	FText lastDialogue;
 	
 protected:
@@ -124,6 +136,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		UClass* NpcSpawn;
+
+	UPROPERTY(EditAnywhere)
+		UClass* TextObject;
+	
+	ATextActor* TextActor;
 
 	float CountDownTimer;
 	float DeltaTimeCounter;

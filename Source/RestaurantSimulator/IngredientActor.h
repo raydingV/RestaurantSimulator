@@ -60,6 +60,15 @@ public:
 		FVector3d ScaleSpawn;
 
 	UPROPERTY(EditAnywhere)
+		FVector3d CostTextLocation;
+
+	UPROPERTY(EditAnywhere)
+		FRotator3d CostTextRotation;
+
+	UPROPERTY(EditAnywhere)
+		FVector CostTextScale;
+
+	UPROPERTY(EditAnywhere)
 		int thisFoodTag;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -73,6 +82,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 		bool takeAway;
+
+	UPROPERTY(EditAnywhere)
+		float Cost;
+
+	UPROPERTY(EditAnywhere)
+		float Profit;
 
 protected:
 	// Called when the game starts or when spawned

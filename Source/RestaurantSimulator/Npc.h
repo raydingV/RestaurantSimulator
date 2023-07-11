@@ -40,6 +40,15 @@ public:
 	FVector Direction;
 	FVector NewLocation;
 
+	UPROPERTY(EditAnywhere)
+	FVector3d ProfitTextLocation;
+
+	UPROPERTY(EditAnywhere)
+	FRotator3d ProfitTextRotation;
+
+	UPROPERTY(EditAnywhere)
+	FVector ProfitTextScale;
+
 	float OldLocation;
 
 	bool IsMoving;

@@ -17,7 +17,8 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 	CounterNPC = 0;
-	Money = 0;
+	Currency = 100;
+	Profit = 0;
 	OrderLenght = 1;
 	MaxNpc = 6;
 	DailyNpcSpawn = MaxNpc;
@@ -64,6 +65,8 @@ void AGameManager::Tick(float DeltaTime)
 	}
 	
 	dayText = FString::Printf(TEXT("Day %d"), DayCounter + 1);
+
+	CurrencyText = FText::Format(FText::FromString("{0} $"), FText::AsNumber(Currency));
 }
 
 void AGameManager::NewDayFunction()
@@ -477,4 +480,14 @@ FText AGameManager::NpcOrderQuoteFunction()
 
 	return NpcOrderQutoe;
 }
+
+void AGameManager::SpawnText(float Value, FVector Location, FRotator3d Rotation, FVector Scale, FColor Color)
+{
+	AActor* textActorObject = GetWorld()->SpawnActor<AActor>(TextObject, Location, Rotation, SpawnParams);
+	TextActor = Cast<ATextActor>(textActorObject);
+	TextActor->Value = Value;
+	TextActor->Scale = Scale;
+	TextActor->TextColor = Color;
+}
+
 

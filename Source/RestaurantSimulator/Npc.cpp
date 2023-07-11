@@ -17,6 +17,8 @@ ANpc::ANpc()
 	
 	RootComponent = SkeletalMesh;
 	
+	ProfitTextScale = FVector3d(1,1,1);
+	
 }
 
 // Called when the game starts or when spawned
@@ -218,9 +220,6 @@ void ANpc::OrderTake()
 	
 	if(PawnClass->takeAway == false && GameManagerClass->eventNpcInteraction == true && OrderReady == true && PawnClass->FoodTag == BreadOrPlate)
 	{
-		GameManagerClass->Money += 100;
-		UE_LOG(LogTemp, Warning, TEXT("%d"), GameManagerClass->Money);
-
 		
 		TArray<AActor*> ChildActors;
 		PawnClass->foodObject->GetAttachedActors(ChildActors);
@@ -243,6 +242,9 @@ void ANpc::OrderTake()
 		GameManagerClass->GetFoodNames.SetNum(0);
 		GameManagerClass->NpcOrderQutoe = FText::FromString("");
 		GameManagerClass->NpcCanOrder = true;
+		GameManagerClass->Currency += GameManagerClass->Profit;
+		GameManagerClass->SpawnText(GameManagerClass->Profit, ProfitTextLocation, ProfitTextRotation, ProfitTextScale, FColor::Green);
+		GameManagerClass->Profit = 0;
 		this->Destroy();
 	}
 }

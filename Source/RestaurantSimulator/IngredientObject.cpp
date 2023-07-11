@@ -19,7 +19,6 @@ AIngredientObject::AIngredientObject()
 void AIngredientObject::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
