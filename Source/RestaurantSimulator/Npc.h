@@ -23,6 +23,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MovementControl")
 		bool IsNpcMoving();
 
+	UFUNCTION()
+		void PatienceOver();
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	USkeletalMeshComponent* SkeletalMesh;
 
@@ -60,6 +63,8 @@ public:
 		bool Inline;
 
 	bool OrderReady;
+
+	bool GameOverNpc;
 
 	UPROPERTY(EditAnywhere)
 		TArray<bool>FoodOrder;

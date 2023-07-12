@@ -20,6 +20,8 @@ ANpc::ANpc()
 	ProfitTextScale = FVector3d(1,1,1);
 
 	PatienceTimer = 1.0f;
+
+	GameOverNpc = false;
 	
 }
 
@@ -35,7 +37,8 @@ void ANpc::BeginPlay()
 	GameManagerClass = Cast<AGameManager>(GameManager);
 
 	SkeletalMesh->SetSkeletalMesh(GameManagerClass->NpcSkeletalMesh);
-	
+
+	GameOverNpc = GameManagerClass->GameOverNpc;
 	TargetLocation = FVector3d(260, 820, 35);
 	
 	if(GameManagerClass->CounterNPC >= 1)
@@ -206,6 +209,11 @@ void ANpc::Tick(float DeltaTime)
 	{
 		PatienceTimer -= DeltaTime / 15.0f;
 	}
+
+	if(PatienceTimer <= 0 || (GameManagerClass->Health <= 0 && GameOverNpc == false))
+	{
+		PatienceOver();
+	}
 }
 
 void ANpc::OrderTake()
@@ -264,6 +272,19 @@ bool ANpc::IsNpcMoving()
 {
 	return IsMoving;
 }
+
+void ANpc::PatienceOver()
+{
+	GameManagerClass->CounterNPC--;
+	GameManagerClass->GetFoodNames.Empty();
+	GameManagerClass->GetFoodNames.SetNum(0);
+	GameManagerClass->NpcOrderQutoe = FText::FromString("");
+	GameManagerClass->NpcCanOrder = true;
+	GameManagerClass->Health--;
+	UE_LOG(LogTemp, Error, TEXT("Health: %d"), GameManagerClass->Health);
+	this->Destroy();
+}
+
 
 
 

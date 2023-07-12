@@ -33,6 +33,7 @@ void AGameManager::BeginPlay()
 	FireDay = false;
 	NpcCanOrder = true;
 	GetFireEventOne = true;
+	Health = 3;
 }
 
 // Called every frame
@@ -42,15 +43,24 @@ void AGameManager::Tick(float DeltaTime)
 
 	CountDownTimer -= DeltaTime * 300;
 
-	if(Currency <= 0)
+	
+	if(Health <= 0)
 	{
 		GameOver = true;
 	}
-	else if(Currency >= 0)
+	else
 	{
-		GameOver = false;
+		if(Currency <= 0)
+		{
+			GameOver = true;
+		}
+		else if(Currency >= 0)
+		{
+			GameOver = false;
+		}
 	}
-
+	
+	
 	if (CountDownTimer <= 0)
 	{
 		EventFunctions(DayCounter);
@@ -66,7 +76,7 @@ void AGameManager::Tick(float DeltaTime)
 		CountDownTimer = 1000.0f;
 	}
 
-	if (NpcSpawn != nullptr && CountDownTimer <= 0 && DailyNpcSpawn > 0 && Event == true)
+	if (NpcSpawn != nullptr && CountDownTimer <= 0 && DailyNpcSpawn > 0 && Event == true && Health > 0)
 	{
 		NpcSkeletalMesh = SkeletalMeshs[FMath::RandRange(0, SkeletalMeshs.Num() - 1)];
 		GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
@@ -88,7 +98,7 @@ void AGameManager::Tick(float DeltaTime)
 
 void AGameManager::GameOverFunction(bool _GameOver)
 {
-	if(_GameOver == true)
+	if(_GameOver == true && Health >= 0)
 	{
 		if(DailyNpcSpawn == 1)
 		{
@@ -99,6 +109,26 @@ void AGameManager::GameOverFunction(bool _GameOver)
 				NpcDialogue.Add(FText::FromString("EZIK GAME OVER OLDU HAHA"));
 				
 				NpcSkeletalMesh = EventSkeletalMeshs[0];
+				EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
+				CounterNPC++;
+				DailyNpcSpawn--;
+			}
+		}
+	}
+
+	if(_GameOver == true && Health <= 0 && GameOverNpc == false)
+	{
+		DailyNpcSpawn = 1;
+		if (DailyNpcSpawn == 1)
+		{
+			Event = false;
+			if(CounterNPC <= 0)
+			{
+				eventNpcInteraction = false;
+				NpcDialogue.Add(FText::FromString("EZIK GAME OVER OLDU HAHA"));
+				
+				NpcSkeletalMesh = EventSkeletalMeshs[0];
+				GameOverNpc = true;
 				EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
 				CounterNPC++;
 				DailyNpcSpawn--;
