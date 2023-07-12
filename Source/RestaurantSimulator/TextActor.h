@@ -28,6 +28,8 @@ public:
 
 	FColor TextColor;
 
+	bool PositiveValue;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -40,8 +40,16 @@ void ATextActor::Tick(float DeltaTime)
 	}
 
 	TextObject->SetTextRenderColor(TextColor);
+
+	if(PositiveValue == true)
+	{
+		TextObject->Text = FText::Format(FText::FromString("{0} $"), FText::AsNumber(Value));	
+	}
+	else
+	{
+		TextObject->Text = FText::Format(FText::FromString("-{0} $"), FText::AsNumber(Value));
+	}
 	
-	TextObject->Text = FText::Format(FText::FromString("{0} $"), FText::AsNumber(Value));
 	TextObject->SetWorldScale3D(Scale);
 }
 

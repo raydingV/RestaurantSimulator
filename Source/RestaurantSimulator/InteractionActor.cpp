@@ -66,7 +66,9 @@ void AInteractionActor::DeleteFood()
 		{
 			GameManagerClass->ControlIngredients[i] = false;
 		}
-	
+
+		GameManagerClass->Profit = 0;
+		
 		PawnClass->foodObject->Destroy();
 		
 		PawnClass->CountFood--;	

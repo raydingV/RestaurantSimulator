@@ -262,7 +262,7 @@ void ANpc::OrderTake()
 		GameManagerClass->NpcOrderQutoe = FText::FromString("");
 		GameManagerClass->NpcCanOrder = true;
 		GameManagerClass->Currency += GameManagerClass->Profit;
-		GameManagerClass->SpawnText(GameManagerClass->Profit, ProfitTextLocation, ProfitTextRotation, ProfitTextScale, FColor::Green);
+		GameManagerClass->SpawnText(GameManagerClass->Profit, true , ProfitTextLocation, ProfitTextRotation, ProfitTextScale, FColor::Green);
 		GameManagerClass->Profit = 0;
 		this->Destroy();
 	}

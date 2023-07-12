@@ -58,7 +58,7 @@ public:
 		FText NpcOrderQuoteFunction();
 
 	UFUNCTION()
-		void SpawnText(float Value, FVector Location, FRotator3d Rotation, FVector Scale, FColor Color);
+		void SpawnText(float Value, bool PositiveValue, FVector Location, FRotator3d Rotation, FVector Scale, FColor Color);
 
 	UFUNCTION()
 		void GameOverFunction(bool GameOver);
@@ -138,6 +138,12 @@ public:
 		FText CurrencyText;
 
 	FText lastDialogue;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		TArray<UTexture2D*> HealthBarTextureArray;
+
+	UPROPERTY(BlueprintReadOnly)
+		UTexture2D* HealthBarTexture;
 	
 protected:
 	// Called when the game starts or when spawned

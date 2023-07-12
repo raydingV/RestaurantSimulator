@@ -93,7 +93,7 @@ void AIngredientActor::AddInFood()
 			GameManagerClass->Currency -= Cost;
 			GameManagerClass->Profit += Profit;
 
-			GameManagerClass->SpawnText(Cost, CostTextLocation, CostTextRotation, CostTextScale, FColor::Red);
+			GameManagerClass->SpawnText(Cost, false, CostTextLocation, CostTextRotation, CostTextScale, FColor::Red);
 		}	
 	}
 }

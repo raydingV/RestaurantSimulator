@@ -86,7 +86,7 @@ void AGameManager::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
 	}
 
-	if(NewDay == true && DayCounter == 5 && OptionDialogueChoose == true)
+	if(NewDay == true && DayCounter == 5 && OptionDialogueChoose == true && GameOver == false)
 	{
 		FireDay = true;
 	}
@@ -94,6 +94,15 @@ void AGameManager::Tick(float DeltaTime)
 	dayText = FString::Printf(TEXT("Day %d"), DayCounter + 1);
 
 	CurrencyText = FText::Format(FText::FromString("{0} $"), FText::AsNumber(Currency));
+
+	if(Health <= 0)
+	{
+		HealthBarTexture = HealthBarTextureArray[0];
+	}
+	else
+	{
+		HealthBarTexture = HealthBarTextureArray[Health];
+	}
 }
 
 void AGameManager::GameOverFunction(bool _GameOver)
@@ -303,7 +312,7 @@ void AGameManager::EventFunctions(int Day)
 		if (DailyNpcSpawn == 8)
 		{
 			Event = false;
-			if (CounterNPC <= 0)
+			if (CounterNPC <= 0 && FireDay == false)
 			{
 				eventNpcInteraction = false;
 				NpcDialogue.Add(FText::FromString(
@@ -550,13 +559,14 @@ FText AGameManager::NpcOrderQuoteFunction()
 	return NpcOrderQutoe;
 }
 
-void AGameManager::SpawnText(float Value, FVector Location, FRotator3d Rotation, FVector Scale, FColor Color)
+void AGameManager::SpawnText(float Value, bool PositiveValue ,FVector Location, FRotator3d Rotation, FVector Scale, FColor Color)
 {
 	AActor* textActorObject = GetWorld()->SpawnActor<AActor>(TextObject, Location, Rotation, SpawnParams);
 	TextActor = Cast<ATextActor>(textActorObject);
 	TextActor->Value = Value;
 	TextActor->Scale = Scale;
 	TextActor->TextColor = Color;
+	TextActor->PositiveValue = PositiveValue;
 }
 
 
