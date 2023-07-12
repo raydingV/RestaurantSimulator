@@ -34,6 +34,8 @@ public:
 	
 	int UnlockMeat;
 
+	int Health;
+
 	UPROPERTY(BlueprintReadOnly)
 		FString dayText;
 	
@@ -100,6 +102,8 @@ public:
 		bool GameOver;
 
 	bool GameOverSpawn;
+
+	bool GameOverNpc;
 
 	AActor* EventNpc;
 

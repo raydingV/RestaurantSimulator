@@ -67,31 +67,34 @@ void AIngredientActor::Tick(float DeltaTime)
 
 void AIngredientActor::AddInFood()
 {
-	FoodObjectActor = PawnClass->foodObject;
-	GameManagerClass->ControlIngredients[thisFoodTag] = true;
-
-	if(FoodObjectActor != nullptr)
+	if(GameManagerClass->ControlIngredients[thisFoodTag] == false)
 	{
-		FoodObjectClass = Cast<AFoodObject>(FoodObjectActor);	
-	}
+		FoodObjectActor = PawnClass->foodObject;
+		GameManagerClass->ControlIngredients[thisFoodTag] = true;
 
-	if(FoodObjectClass != nullptr)
-	{
-		NewSpawnObject = GetWorld()->SpawnActor<AActor>(IngredientObject, GetActorLocation(), GetActorRotation(), SpawnParameters);
-		NewSpawnObject->SetActorScale3D(ScaleSpawn);
-		IngredientClass = Cast<AIngredientObject>(NewSpawnObject);
-		IngredientClass->Mesh->SetStaticMesh(SpawnMesh);
-		FoodObjectClass->IngredientAdderFunction(NewSpawnObject, NewSpawnLocation);
-
-		if(PawnClass->FoodTag == 0)
+		if(FoodObjectActor != nullptr)
 		{
-			NewSpawnObject->SetActorRotation(NewSpawnRotator);
+			FoodObjectClass = Cast<AFoodObject>(FoodObjectActor);	
 		}
 
-		GameManagerClass->Currency -= Cost;
-		GameManagerClass->Profit += Profit;
+		if(FoodObjectClass != nullptr)
+		{
+			NewSpawnObject = GetWorld()->SpawnActor<AActor>(IngredientObject, GetActorLocation(), GetActorRotation(), SpawnParameters);
+			NewSpawnObject->SetActorScale3D(ScaleSpawn);
+			IngredientClass = Cast<AIngredientObject>(NewSpawnObject);
+			IngredientClass->Mesh->SetStaticMesh(SpawnMesh);
+			FoodObjectClass->IngredientAdderFunction(NewSpawnObject, NewSpawnLocation);
 
-		GameManagerClass->SpawnText(Cost, CostTextLocation, CostTextRotation, CostTextScale, FColor::Red);
+			if(PawnClass->FoodTag == 0)
+			{
+				NewSpawnObject->SetActorRotation(NewSpawnRotator);
+			}
+
+			GameManagerClass->Currency -= Cost;
+			GameManagerClass->Profit += Profit;
+
+			GameManagerClass->SpawnText(Cost, CostTextLocation, CostTextRotation, CostTextScale, FColor::Red);
+		}	
 	}
 }
 
