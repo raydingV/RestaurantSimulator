@@ -200,7 +200,7 @@ void ANpc::Tick(float DeltaTime)
 		GameManagerClass->NpcCanOrder = false;
 	}
 
-	if(GetActorLocation().X <= 430 && GameManagerClass->Event == true)
+	if((280 <= GetActorLocation().X && GetActorLocation().X <= 430) && GameManagerClass->Event == true)
 	{
 		PatienceTimer -= DeltaTime / 30.0f;
 		Inline = true;

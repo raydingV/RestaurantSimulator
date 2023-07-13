@@ -11,29 +11,37 @@ AGameManager::AGameManager()
 	PrimaryActorTick.bCanEverTick = true;
 	Event = true;
 
-	GameOver = false;
+
 	DayCounter = 1;
 	Currency = 100;
+	
+	Health = 3;
+	UnlockMeat = 0;
+	
+	Profit = 0;
+	OrderLenght = 1;
+	
+	MaxNpc = 6;
+	CounterNPC = 0;
+	DailyNpcSpawn = MaxNpc;
+
+	GameOver = false;
 	GameOverSpawn = false;
+	
+	NewDay = false;
+	FireDay = false;
+	
+	eventNpcInteraction = true;
+	OptionDialogueContinue = false;
+
+	NpcCanOrder = true;
+	GetFireEventOne = true;
 }
 
 // Called when the game starts or when spawned
 void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	Profit = 0;
-	OrderLenght = 1;
-	MaxNpc = 6;
-	DailyNpcSpawn = MaxNpc;
-	NewDay = false;
-	CounterNPC = 0;
-	eventNpcInteraction = true;
-	OptionDialogueContinue = false;
-	UnlockMeat = 0;
-	FireDay = false;
-	NpcCanOrder = true;
-	GetFireEventOne = true;
-	Health = 3;
 }
 
 // Called every frame
