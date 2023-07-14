@@ -1,14 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "Npc.h"
 
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 ANpc::ANpc()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	IsMoving = true;
@@ -25,7 +21,6 @@ ANpc::ANpc()
 	
 }
 
-// Called when the game starts or when spawned
 void ANpc::BeginPlay()
 {
 	Super::BeginPlay();
@@ -45,58 +40,201 @@ void ANpc::BeginPlay()
 	{
 		TargetLocation = FVector3d(TargetLocation.X + 150, 820, 35);
 	}
+	
+	TargetRotation = FRotator3d(0,90,0);
+	SetActorRotation(TargetRotation);
 
+	OrderInitialize();
+}
+
+void ANpc::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	if(GameManagerClass->CounterNPC == 1)
+	{
+		TargetLocation = FVector3d(260, 820, 35);
+	}//For objects to line up
+	
+	ToMoveObject(DeltaTime);
+
+	IsMovingFunction();
+
+	if(GetActorLocation().X <= 270 && GameManagerClass->NpcCanOrder == true && GameManagerClass->Event == true)
+	{
+		OrderToSetQuoteText();
+	}
+
+	if((280 <= GetActorLocation().X && GetActorLocation().X <= 430) && GameManagerClass->Event == true)
+	{
+		PatienceTimer -= DeltaTime / 30.0f;
+		Inline = true;
+	}
+	else if(GetActorLocation().X <= 270 && GameManagerClass->Event == true)
+	{
+		PatienceTimer -= DeltaTime / 15.0f;
+	}
+
+	if(PatienceTimer <= 0 || (GameManagerClass->Health <= 0 && GameOverNpc == false))
+	{
+		PatienceOver();
+	}
+}
+
+void ANpc::ToMoveObject(float DeltaTime)
+{
+	OldLocation = GetActorLocation().X;
+	
+	CurrentLocation = GetActorLocation();
+	
+	if(CurrentLocation.X >= TargetLocation.X)
+	{
+		Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
+		NewLocation = CurrentLocation + (Direction * 300 * DeltaTime);
+		SetActorLocation(NewLocation);	
+	}
+}
+
+
+void ANpc::IsMovingFunction()
+{
+	if(OldLocation >= GetActorLocation().X && OldLocation >= TargetLocation.X + 10)
+	{
+		IsMoving = true;
+	}
+	else
+	{
+		IsMoving = false;
+	}
+}
+
+
+void ANpc::OrderToSetQuoteText()
+{
+	if(BreadOrPlate == 0)
+	{
+		GameManagerClass->GetFoodNames.Add(FText::FromString("Wrap with"));
+	}
+	else
+	{
+		GameManagerClass->GetFoodNames.Add(FText::FromString("On Plate with"));
+	}
+	
+	for (int i = 0; i < FoodOrder.Num(); i++)
+	{
+		if(FoodOrder[i] == true)
+		{
+			GameManagerClass->GetFoodNames.Add(FoodNames[i]);
+		}
+	}
+
+	GameManagerClass->NpcCanOrder = false;
+}
+
+
+void ANpc::OrderControl()
+{
+	for(int i = 0; i < FoodOrder.Num(); i++)
+	{
+		if(GameManagerClass->ControlIngredients[i] == FoodOrder[i])
+		{
+			OrderReady = true;
+		}
+		else
+		{
+			OrderReady = false;
+			UE_LOG(LogTemp, Error, TEXT("OrderReady = false"));
+			break;
+		}
+	}
+}
+
+
+void ANpc::OrderTake()
+{
+	OrderControl();
+	
+	if(PawnClass->takeAway == false && GameManagerClass->eventNpcInteraction == true && OrderReady == true && PawnClass->FoodTag == BreadOrPlate)
+	{
+		PawnClass->DestroyFoodObject();
+		
+		GameManagerClass->OrderQuoteReset();
+		
+		GameManagerClass->Currency += GameManagerClass->Profit;
+		GameManagerClass->SpawnText(GameManagerClass->Profit, true , ProfitTextLocation, ProfitTextRotation, ProfitTextScale, FColor::Green);
+		GameManagerClass->Profit = 0;
+		
+		GameManagerClass->CounterNPC--;
+		this->Destroy();
+	}
+}
+
+bool ANpc::IsNpcMoving()
+{
+	return IsMoving;
+}
+
+void ANpc::PatienceOver()
+{
+	GameManagerClass->OrderQuoteReset();
+	
+	GameManagerClass->Health--;
+	UE_LOG(LogTemp, Error, TEXT("Health: %d"), GameManagerClass->Health);
+	
+	GameManagerClass->CounterNPC--;
+	this->Destroy();
+}
+
+void ANpc::OrderInitialize()
+{
 	OrderFoodTag = FMath::RandRange(0, GameManagerClass->UnlockMeat);
 	BreadOrPlate = FMath::RandRange(0,1);
 
 	UE_LOG(LogTemp, Error, TEXT("%d"), BreadOrPlate);
 	
-	TargetRotation = FRotator3d(0,90,0);
-	SetActorRotation(TargetRotation);
-
 	OrderReady = false;
 
 	switch (GameManagerClass->OrderLenght)
 	{
-		case 1:
-			FoodOrder[0] = true;
-			UE_LOG(LogTemp, Error, TEXT("Case1"));
-			break;
+	case 1:
+		FoodOrder[0] = true;
+		UE_LOG(LogTemp, Error, TEXT("Case1"));
+		break;
 
-		case 2:
-			for(int i = 0; i < FoodOrder.Num() - 3; i++)
+	case 2:
+		for(int i = 0; i < FoodOrder.Num() - 3; i++)
+		{
+			TrueOrFalse = FMath::RandRange(0,1);
+			if(TrueOrFalse == 1)
 			{
-				TrueOrFalse = FMath::RandRange(0,1);
-				if(TrueOrFalse == 1)
-				{
-					FoodOrder[i] = true;	
-				}
-				else
-				{
-					FoodOrder[i] = false;
-				}
+				FoodOrder[i] = true;	
 			}
-			if(BreadOrPlate == 0)
+			else
 			{
-				FoodOrder.Last() = false;
+				FoodOrder[i] = false;
 			}
-			UE_LOG(LogTemp, Error, TEXT("Case2"));
-			FoodOrder[0] = true;
-			break;
+		}
+		if(BreadOrPlate == 0)
+		{
+			FoodOrder.Last() = false;
+		}
+		UE_LOG(LogTemp, Error, TEXT("Case2"));
+		FoodOrder[0] = true;
+		break;
 
-		case 3:
-			for(int i = 0; i < FoodOrder.Num() - 1; i++)
+	case 3:
+		for(int i = 0; i < FoodOrder.Num() - 1; i++)
+		{
+			TrueOrFalse = FMath::RandRange(0,1);
+			if(TrueOrFalse == 1)
 			{
-				TrueOrFalse = FMath::RandRange(0,1);
-				if(TrueOrFalse == 1)
-				{
-					FoodOrder[i] = true;	
-				}
-				else
-				{
-					FoodOrder[i] = false;
-				}
+				FoodOrder[i] = true;	
 			}
+			else
+			{
+				FoodOrder[i] = false;
+			}
+		}
 		UE_LOG(LogTemp, Error, TEXT("Case3"));
 		if(OrderFoodTag == 0)
 		{
@@ -114,7 +252,7 @@ void ANpc::BeginPlay()
 		}
 		break;
 
-		case 4:
+	case 4:
 		for(int i = 0; i < FoodOrder.Num(); i++)
 		{
 			TrueOrFalse = FMath::RandRange(0,1);
@@ -144,145 +282,6 @@ void ANpc::BeginPlay()
 		}
 		break;
 	}
-	
-}
-
-// Called every frame
-void ANpc::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	if(GameManagerClass->CounterNPC == 1)
-	{
-		TargetLocation = FVector3d(260, 820, 35);
-	}
-
-	OldLocation = GetActorLocation().X;
-
-	CurrentLocation = GetActorLocation();
-	
-	if(CurrentLocation.X >= TargetLocation.X)
-	{
-		Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
-		NewLocation = CurrentLocation + (Direction * 300 * DeltaTime);
-		SetActorLocation(NewLocation);	
-	}
-	
-	if(OldLocation >= GetActorLocation().X && OldLocation >= TargetLocation.X + 10)
-	{
-		IsMoving = true;
-	}
-	else
-	{
-		IsMoving = false;
-	}
-
-	if(GetActorLocation().X <= 270 && GameManagerClass->NpcCanOrder == true && GameManagerClass->Event == true)
-	{
-		if(BreadOrPlate == 0)
-		{
-			GameManagerClass->GetFoodNames.Add(FText::FromString("Wrap with"));
-		}
-		else
-		{
-			GameManagerClass->GetFoodNames.Add(FText::FromString("On Plate with"));
-		}
-	
-		for (int i = 0; i < FoodOrder.Num(); i++)
-		{
-			if(FoodOrder[i] == true)
-			{
-				GameManagerClass->GetFoodNames.Add(FoodNames[i]);
-
-			}
-		}
-
-		GameManagerClass->NpcCanOrder = false;
-	}
-
-	if((280 <= GetActorLocation().X && GetActorLocation().X <= 430) && GameManagerClass->Event == true)
-	{
-		PatienceTimer -= DeltaTime / 30.0f;
-		Inline = true;
-	}
-	else if(GetActorLocation().X <= 270 && GameManagerClass->Event == true)
-	{
-		PatienceTimer -= DeltaTime / 15.0f;
-	}
-
-	if(PatienceTimer <= 0 || (GameManagerClass->Health <= 0 && GameOverNpc == false))
-	{
-		PatienceOver();
-	}
-}
-
-void ANpc::OrderTake()
-{
-	for(int i = 0; i < FoodOrder.Num(); i++)
-	{
-		if(GameManagerClass->ControlIngredients[i] == FoodOrder[i])
-		{
-			OrderReady = true;
-		}
-		else
-		{
-			OrderReady = false;
-			UE_LOG(LogTemp, Error, TEXT("OrderReady = false"));
-			break;
-		}
-	}
-
-	if(PawnClass->FoodTag == BreadOrPlate)
-	{
-		UE_LOG(LogTemp, Error, TEXT("FoodTag is True"));
-	}
-	
-	if(PawnClass->takeAway == false && GameManagerClass->eventNpcInteraction == true && OrderReady == true && PawnClass->FoodTag == BreadOrPlate)
-	{
-		
-		TArray<AActor*> ChildActors;
-		PawnClass->foodObject->GetAttachedActors(ChildActors);
-		
-		for (AActor* ChildActor : ChildActors)
-		{
-			ChildActor->Destroy();
-		}
-
-		for (int i = 0; i < GameManagerClass->ControlIngredients.Num(); i++)
-		{
-			GameManagerClass->ControlIngredients[i] = false;
-		}
-		
-		PawnClass->foodObject->Destroy();
-		
-		PawnClass->CountFood--;
-		GameManagerClass->CounterNPC--;
-		GameManagerClass->GetFoodNames.Empty();
-		GameManagerClass->GetFoodNames.SetNum(0);
-		GameManagerClass->NpcOrderQutoe = FText::FromString("");
-		GameManagerClass->NpcCanOrder = true;
-		GameManagerClass->Currency += GameManagerClass->Profit;
-		GameManagerClass->SpawnText(GameManagerClass->Profit, true , ProfitTextLocation, ProfitTextRotation, ProfitTextScale, FColor::Green);
-		GameManagerClass->Profit = 0;
-		this->Destroy();
-	}
-}
-
-bool ANpc::IsNpcMoving()
-{
-	return IsMoving;
-}
-
-void ANpc::PatienceOver()
-{
-	GameManagerClass->CounterNPC--;
-	GameManagerClass->GetFoodNames.Empty();
-	GameManagerClass->GetFoodNames.SetNum(0);
-	GameManagerClass->NpcOrderQutoe = FText::FromString("");
-	GameManagerClass->NpcCanOrder = true;
-	GameManagerClass->Health--;
-	UE_LOG(LogTemp, Error, TEXT("Health: %d"), GameManagerClass->Health);
-	this->Destroy();
 }
 
 

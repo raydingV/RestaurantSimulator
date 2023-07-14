@@ -26,6 +26,21 @@ public:
 	UFUNCTION()
 		void PatienceOver();
 
+	UFUNCTION()
+		void OrderControl();
+
+	UFUNCTION()
+		void OrderInitialize();
+
+	UFUNCTION()
+		void OrderToSetQuoteText();
+
+	UFUNCTION()
+		void IsMovingFunction();
+
+	UFUNCTION()
+		void ToMoveObject(float DeltaTime);
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	USkeletalMeshComponent* SkeletalMesh;
 

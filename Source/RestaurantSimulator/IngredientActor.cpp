@@ -44,13 +44,11 @@ void AIngredientActor::Tick(float DeltaTime)
 
 		if(IsDonerAnim == true)
 		{
-			PawnClass->TargetRotation = FRotator(GetActorRotation().Pitch, -90, GetActorRotation().Roll);
-			PawnClass->newRotationSet = true;
+			PawnClass->InputDisable(-90);
 		}
 		else
 		{
-			PawnClass->TargetRotation = FRotator(GetActorRotation().Pitch, 90, GetActorRotation().Roll);
-			PawnClass->newRotationSet = true;
+			PawnClass->InputDisable(90);
 		}
 	}
 
@@ -79,16 +77,7 @@ void AIngredientActor::AddInFood()
 
 		if(FoodObjectClass != nullptr)
 		{
-			NewSpawnObject = GetWorld()->SpawnActor<AActor>(IngredientObject, GetActorLocation(), GetActorRotation(), SpawnParameters);
-			NewSpawnObject->SetActorScale3D(ScaleSpawn);
-			IngredientClass = Cast<AIngredientObject>(NewSpawnObject);
-			IngredientClass->Mesh->SetStaticMesh(SpawnMesh);
-			FoodObjectClass->IngredientAdderFunction(NewSpawnObject, NewSpawnLocation);
-
-			if(PawnClass->FoodTag == 0)
-			{
-				NewSpawnObject->SetActorRotation(NewSpawnRotator);
-			}
+			SpawnIngredientObject();
 
 			GameManagerClass->Currency -= Cost;
 			GameManagerClass->Profit += Profit;
@@ -97,5 +86,20 @@ void AIngredientActor::AddInFood()
 		}	
 	}
 }
+
+void AIngredientActor::SpawnIngredientObject()
+{
+	NewSpawnObject = GetWorld()->SpawnActor<AActor>(IngredientObject, GetActorLocation(), GetActorRotation(), SpawnParameters);
+	NewSpawnObject->SetActorScale3D(ScaleSpawn);
+	IngredientClass = Cast<AIngredientObject>(NewSpawnObject);
+	IngredientClass->Mesh->SetStaticMesh(SpawnMesh);
+	FoodObjectClass->IngredientAdderFunction(NewSpawnObject, NewSpawnLocation);
+
+	if(PawnClass->FoodTag == 0)
+	{
+		NewSpawnObject->SetActorRotation(NewSpawnRotator);
+	}
+}
+
 
 

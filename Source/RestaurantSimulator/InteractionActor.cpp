@@ -51,27 +51,16 @@ void AInteractionActor::FoodObjectCreate()
 
 void AInteractionActor::DeleteFood()
 {
-
 	if(PawnClass->takeAway == false)
 	{
-		TArray<AActor*> ChildActors;
-		PawnClass->foodObject->GetAttachedActors(ChildActors);
+		PawnClass->DestroyFoodObject();
 		
-		for (AActor* ChildActor : ChildActors)
-		{
-			ChildActor->Destroy();
-		}
-
 		for (int i = 0; i < GameManagerClass->ControlIngredients.Num(); i++)
 		{
 			GameManagerClass->ControlIngredients[i] = false;
 		}
 
 		GameManagerClass->Profit = 0;
-		
-		PawnClass->foodObject->Destroy();
-		
-		PawnClass->CountFood--;	
 	}
 }
 

@@ -62,6 +62,15 @@ public:
 
 	UFUNCTION()
 		void GameOverFunction(bool GameOver);
+
+	UFUNCTION()
+		void OrderQuoteReset();
+
+	UFUNCTION()
+		void DialogueReset();
+
+	UFUNCTION()
+		void SpawnNPC(int MeshNpcArrayValue, bool Random, bool IsEventNpc);
 	
 	UPROPERTY(EditAnywhere)
 		TArray<USkeletalMesh*> SkeletalMeshs;

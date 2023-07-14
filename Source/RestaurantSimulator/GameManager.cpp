@@ -11,7 +11,7 @@ AGameManager::AGameManager()
 	PrimaryActorTick.bCanEverTick = true;
 	Event = true;
 
-
+	// 
 	DayCounter = 1;
 	Currency = 100;
 	
@@ -50,7 +50,6 @@ void AGameManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CountDownTimer -= DeltaTime * 300;
-
 	
 	if(Health <= 0)
 	{
@@ -68,17 +67,13 @@ void AGameManager::Tick(float DeltaTime)
 		}
 	}
 	
-	
 	if (CountDownTimer <= 0)
 	{
 		EventFunctions(DayCounter);
-	}
-	
-	if(CountDownTimer <= 0)
-	{
+		
 		GameOverFunction(GameOver);	
 	}
-
+	
 	if (CounterNPC >= 2)
 	{
 		CountDownTimer = 1000.0f;
@@ -86,12 +81,8 @@ void AGameManager::Tick(float DeltaTime)
 
 	if (NpcSpawn != nullptr && CountDownTimer <= 0 && DailyNpcSpawn > 0 && Event == true && Health > 0)
 	{
-		NpcSkeletalMesh = SkeletalMeshs[FMath::RandRange(0, SkeletalMeshs.Num() - 1)];
-		GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
+		SpawnNPC(NULL, true, false);
 		CountDownTimer = 1000.0f;
-		CounterNPC++;
-		DailyNpcSpawn--;
-		UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
 	}
 
 	if(NewDay == true && DayCounter == 5 && OptionDialogueChoose == true && GameOver == false)
@@ -113,6 +104,122 @@ void AGameManager::Tick(float DeltaTime)
 	}
 }
 
+void AGameManager::SpawnNPC(int MeshNpcArrayValue, bool Random, bool IsEventNpc)
+{
+	if(Random == true)
+	{
+		NpcSkeletalMesh = SkeletalMeshs[FMath::RandRange(0, SkeletalMeshs.Num() - 1)];	
+	}
+	else
+	{
+		NpcSkeletalMesh = EventSkeletalMeshs[MeshNpcArrayValue];
+	}
+
+	if(IsEventNpc == true)
+	{
+		EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);	
+	}
+	else
+	{
+		GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
+	}
+	
+	CounterNPC++;
+	DailyNpcSpawn--;
+	UE_LOG(LogTemp, Error, TEXT("DailyNpc: %d"), DailyNpcSpawn);
+}
+
+void AGameManager::NewDayFunction()
+{
+	if(MaxNpc < 8)
+	{
+		MaxNpc += 1;	
+	}
+	
+	DailyNpcSpawn = MaxNpc;
+	UE_LOG(LogTemp, Error, TEXT("New Day!!!!"));
+	NewDay = false;
+	DayCounter++;
+}
+
+bool AGameManager::EndOfDay(int NpcCounter, int dailyNpc)
+{
+	if (dailyNpc <= 0 && NpcCounter <= 0)
+	{
+		NewDay = true;
+	}
+	return NewDay;
+}
+
+void AGameManager::DialogueReset()
+{
+	NpcDialogue.Empty();
+	NpcDialogue.SetNum(0);
+	OptionChooseDialogue1.Empty();
+	OptionChooseDialogue1.SetNum(0);
+	OptionChooseDialogue2.Empty();
+	OptionChooseDialogue2.SetNum(0);
+	OptionChooseDialogue3.Empty();
+	OptionChooseDialogue3.SetNum(0);
+	Option1.Empty();
+	Option1.SetNum(0);
+	Option2.Empty();
+	Option2.SetNum(0);
+	Option3.Empty();
+	Option3.SetNum(0);
+}
+
+
+void AGameManager::EventEnd()
+{
+	Event = true;
+	eventNpcInteraction = true;
+	CounterNPC = 0;
+	DialogueReset();
+	EventNpc->Destroy();
+}
+
+FText AGameManager::NpcOrderQuoteFunction()
+{
+	if (Event && GetFoodNames.Num() > 0)
+	{
+		FString FormattedString;
+		
+		for (int i = 0; i < GetFoodNames.Num(); i++)
+		{
+			FString FoodName = GetFoodNames[i].ToString();
+			FormattedString += FString::Printf(TEXT(" %s"), *FoodName);
+		}
+
+		NpcOrderQutoe = FText::FromString(FormattedString);
+	}
+
+	return NpcOrderQutoe;
+}
+
+void AGameManager::SpawnText(float Value, bool PositiveValue ,FVector Location, FRotator3d Rotation, FVector Scale, FColor Color)
+{
+	AActor* textActorObject = GetWorld()->SpawnActor<AActor>(TextObject, Location, Rotation, SpawnParams);
+	TextActor = Cast<ATextActor>(textActorObject);
+	TextActor->Value = Value;
+	TextActor->Scale = Scale;
+	TextActor->TextColor = Color;
+	TextActor->PositiveValue = PositiveValue;
+}
+
+void AGameManager::OrderQuoteReset()
+{
+	for (int i = 0; i < ControlIngredients.Num(); i++)
+	{
+		ControlIngredients[i] = false;
+	}
+	
+	GetFoodNames.Empty();
+	GetFoodNames.SetNum(0);
+	NpcOrderQutoe = FText::FromString("");
+	NpcCanOrder = true;
+}
+
 void AGameManager::GameOverFunction(bool _GameOver)
 {
 	if(_GameOver == true && Health >= 0)
@@ -125,10 +232,7 @@ void AGameManager::GameOverFunction(bool _GameOver)
 				eventNpcInteraction = false;
 				NpcDialogue.Add(FText::FromString("EZIK GAME OVER OLDU HAHA"));
 				
-				NpcSkeletalMesh = EventSkeletalMeshs[0];
-				EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(0, false, true);
 			}
 		}
 	}
@@ -144,36 +248,11 @@ void AGameManager::GameOverFunction(bool _GameOver)
 				eventNpcInteraction = false;
 				NpcDialogue.Add(FText::FromString("EZIK GAME OVER OLDU HAHA"));
 				
-				NpcSkeletalMesh = EventSkeletalMeshs[0];
 				GameOverNpc = true;
-				EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(0, false, true);
 			}
 		}
 	}
-}
-
-
-void AGameManager::NewDayFunction()
-{
-	if(MaxNpc < 8)
-	{
-		MaxNpc += 1;	
-	}
-	DailyNpcSpawn = MaxNpc;
-	UE_LOG(LogTemp, Error, TEXT("New Day!!!!"));
-	NewDay = false;
-	DayCounter++;
-}
-
-bool AGameManager::EndOfDay(int NpcCounter, int dailyNpc)
-{
-	if (dailyNpc <= 0 && NpcCounter <= 0)
-	{
-		NewDay = true;
-	}
-	return NewDay;
 }
 
 void AGameManager::EventFunctions(int Day)
@@ -192,12 +271,9 @@ void AGameManager::EventFunctions(int Day)
 				OptionChooseDialogue1.Add(FText::FromString("It's a good thought, but you can't go with beauty in the real world. Good luck, you will need it!"));
 				OptionChooseDialogue2.Add(FText::FromString("It's a good thought, but you can't go with beauty in the real world. Good luck, you will need it!"));
 				Option1.Add(FText::FromString("Everyone has a chance to succeed and I'm here to do the best."));
-				Option2.Add(FText::FromString("Competition can help both of us thrive, right?"));	
+				Option2.Add(FText::FromString("Competition can help both of us thrive, right?"));
 				
-				NpcSkeletalMesh = EventSkeletalMeshs[0];
-				EventNpc = GetWorld()->SpawnActor<AActor>(NpcSpawn, GetActorLocation() , GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(0, false, true);
 			}
 		}
 		break;
@@ -222,11 +298,7 @@ void AGameManager::EventFunctions(int Day)
 				Option1.Add(FText::FromString("I will think about that"));
 				Option2.Add(FText::FromString("I WILL SUE YOU!"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[0];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(0, false, true);
 			}
 		}
 		break;
@@ -252,11 +324,7 @@ void AGameManager::EventFunctions(int Day)
 				Option1.Add(FText::FromString("Prices are certain, get out."));
 				Option2.Add(FText::FromString("Sure, please come with your friends more often."));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[1];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(1, false, true);
 			}
 		}
 
@@ -275,11 +343,7 @@ void AGameManager::EventFunctions(int Day)
 				NpcDialogue.Add(FText::FromString("new products and tools will come in the next days."));
 				NpcDialogue.Add(FText::FromString("Look yourself very well, See ya!"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[2];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(2, false, true);
 			}
 		}
 		break;
@@ -304,11 +368,7 @@ void AGameManager::EventFunctions(int Day)
 				Option1.Add(FText::FromString("Of course man, just take it"));
 				Option2.Add(FText::FromString("Get out of here you poor"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[3];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(3, false, true);
 			}
 		}
 		break;
@@ -341,10 +401,7 @@ void AGameManager::EventFunctions(int Day)
 				Option2.Add(FText::FromString("Just ketchup?"));
 				Option2.Add(FText::FromString("Drop your number, I'll call you later."));
 		
-				NpcSkeletalMesh = EventSkeletalMeshs[4];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
+				SpawnNPC(4, false, true);
 			}
 		
 			if (OptionDialogueContinue)
@@ -385,11 +442,7 @@ void AGameManager::EventFunctions(int Day)
 					"Plus, now you have a drink! I am a stupid man didn't even realize drinks are missing."));
 				NpcDialogue.Add(FText::FromString("Let me know if anything goes wrong, See ya!"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[2];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(2, false, true);
 			}
 		}
 		break;
@@ -415,11 +468,7 @@ void AGameManager::EventFunctions(int Day)
 				Option1.Add(FText::FromString("Miss, I think you should relax and leave."));
 				Option2.Add(FText::FromString("Do whatever you want"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[5];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(5, false, true);
 			}
 		}
 		break;
@@ -437,11 +486,7 @@ void AGameManager::EventFunctions(int Day)
 				NpcDialogue.Add(FText::FromString("Or you don't know how to keep your relation with your associates."));
 				NpcDialogue.Add(FText::FromString("HAHAHAHAHA!"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[0];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(0, false, true);
 			}
 		}
 
@@ -456,11 +501,7 @@ void AGameManager::EventFunctions(int Day)
 				NpcDialogue.Add(FText::FromString("Mio padre, Voglio che tu sia piu vicino a me"));
 				NpcDialogue.Add(FText::FromString("Ciao"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[4];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(4, false, true);
 			}
 		}
 		break;
@@ -494,11 +535,7 @@ void AGameManager::EventFunctions(int Day)
 				Option2.Add(FText::FromString("A woman, She sparked an argument"));
 				Option3.Add(FText::FromString("A mysterious man"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[6];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(6, false, true);
 			}
 		}
 
@@ -516,65 +553,11 @@ void AGameManager::EventFunctions(int Day)
 				"And man, this rice is a great product. Peoples absolutely like it."));
 				NpcDialogue.Add(FText::FromString("See ya!"));
 
-				NpcSkeletalMesh = EventSkeletalMeshs[2];
-				EventNpc = GetWorld()->SpawnActor<
-					AActor>(NpcSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
-				CounterNPC++;
-				DailyNpcSpawn--;
+				SpawnNPC(2, false, true);
 			}
 		}
 		break;
 	}
-}
-
-void AGameManager::EventEnd()
-{
-	Event = true;
-	eventNpcInteraction = true;
-	CounterNPC = 0;
-	NpcDialogue.Empty();
-	NpcDialogue.SetNum(0);
-	OptionChooseDialogue1.Empty();
-	OptionChooseDialogue1.SetNum(0);
-	OptionChooseDialogue2.Empty();
-	OptionChooseDialogue2.SetNum(0);
-	OptionChooseDialogue3.Empty();
-	OptionChooseDialogue3.SetNum(0);
-	Option1.Empty();
-	Option1.SetNum(0);
-	Option2.Empty();
-	Option2.SetNum(0);
-	Option3.Empty();
-	Option3.SetNum(0);
-	EventNpc->Destroy();
-}
-
-FText AGameManager::NpcOrderQuoteFunction()
-{
-	if (Event && GetFoodNames.Num() > 0)
-	{
-		FString FormattedString;
-		
-		for (int i = 0; i < GetFoodNames.Num(); i++)
-		{
-			FString FoodName = GetFoodNames[i].ToString();
-			FormattedString += FString::Printf(TEXT(" %s"), *FoodName);
-		}
-
-		NpcOrderQutoe = FText::FromString(FormattedString);
-	}
-
-	return NpcOrderQutoe;
-}
-
-void AGameManager::SpawnText(float Value, bool PositiveValue ,FVector Location, FRotator3d Rotation, FVector Scale, FColor Color)
-{
-	AActor* textActorObject = GetWorld()->SpawnActor<AActor>(TextObject, Location, Rotation, SpawnParams);
-	TextActor = Cast<ATextActor>(textActorObject);
-	TextActor->Value = Value;
-	TextActor->Scale = Scale;
-	TextActor->TextColor = Color;
-	TextActor->PositiveValue = PositiveValue;
 }
 
 

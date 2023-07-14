@@ -20,6 +20,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerInput")
 		void CameraInput(float rotation);
 
+	UFUNCTION()
+		void DestroyFoodObject();
+
+	UFUNCTION()
+		void InputDisable(float Direction);
+
 	UPROPERTY(EditAnywhere)
 		float rotationSpeed;
 

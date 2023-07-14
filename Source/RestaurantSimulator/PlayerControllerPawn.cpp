@@ -56,14 +56,12 @@ void APlayerControllerPawn::Tick(float DeltaTime)
 
 	if(GameManagerClass->eventNpcInteraction == false && GameManagerClass->FireDay == true)
 	{
-		TargetRotation = FRotator(GetActorRotation().Pitch, 0, GetActorRotation().Roll);
-		newRotationSet = true;
+		InputDisable(0);
 	}
 
 	if(GameManagerClass->eventNpcInteraction == false )
 	{
-		TargetRotation = FRotator(GetActorRotation().Pitch, 0, GetActorRotation().Roll);
-		newRotationSet = true;
+		InputDisable(0);
 	}
 }
 
@@ -93,4 +91,27 @@ void APlayerControllerPawn::CameraInput(float rotation)
 		}	
 	}
 }
+
+void APlayerControllerPawn::DestroyFoodObject()
+{
+	TArray<AActor*> ChildActors;
+	foodObject->GetAttachedActors(ChildActors);
+		
+	for (AActor* ChildActor : ChildActors)
+	{
+		ChildActor->Destroy();
+	}
+		
+	foodObject->Destroy();
+		
+	CountFood--;
+}
+
+void APlayerControllerPawn::InputDisable(float Direction)
+{
+	TargetRotation = FRotator(GetActorRotation().Pitch, Direction, GetActorRotation().Roll);
+	newRotationSet = true;
+}
+
+
 

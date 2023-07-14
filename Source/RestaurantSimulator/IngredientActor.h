@@ -50,6 +50,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FoodToIngredient")
 		void AddInFood();
 
+	UFUNCTION()
+		void SpawnIngredientObject();
+
 	UPROPERTY(EditAnywhere)
 		FRotator3d NewSpawnRotator;
 
